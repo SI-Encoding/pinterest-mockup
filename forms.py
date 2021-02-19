@@ -25,12 +25,12 @@ class BlogForm(FlaskForm):
     username = SelectField('Username', choices=[], coerce=int)
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
-    photos = FileField("Please select an image to upload", validators=[FileRequired()])
+    photos = FileField("Please select an image to upload", validators=[FileAllowed(['jpg','png'], 'Images only!'), FileRequired()])
     submit = SubmitField('Submit')
 
 #Updating account form
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)]) 
     email = StringField('Email',validators=[DataRequired(), Email()]) 
-    photo = FileField(' Update Profile Pic', validators=[FileAllowed(['jpg','png'])])
+    photo = FileField(' Update Profile Pic', validators=[FileAllowed(['jpg','png'], 'Images only!')])
     submit = SubmitField('Update')

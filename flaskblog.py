@@ -2,7 +2,7 @@
 ### However the actual example uses sqlalchemy which uses Object Relational Mapper, which are not covered in this course. I have instead used natural sQL queries for this demo. 
 
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import RegistrationForm, BlogForm, LoginForm
+from forms import RegistrationForm, BlogForm, LoginForm, UpdateAccountForm
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField, FileAllowed
 from flask_uploads import IMAGES, UploadSet, configure_uploads
@@ -13,11 +13,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eca8a83f56f05a17a27d8076f0904b1f'
 
 photos = UploadSet("photos", IMAGES)
-app.config["UPLOADED_PHOTOS_DEST"] = "static/img"
+app.config["UPLOADED_PHOTOS_DEST"] = "static/uploaded_pics"
 configure_uploads(app, photos)
 
 #May delete
-UPLOAD_FOLDER = '../static'
+UPLOAD_FOLDER = 'static/uploaded_pics'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
@@ -80,9 +80,6 @@ def login():
 @app.route("/blog", methods=['GET', 'POST'])
 def blog():
  
-        
-    
- 
     #Blog
     form = BlogForm()
     form.username.choices = users
@@ -90,25 +87,37 @@ def blog():
         choices = form.username.choices
         user =  (choices[form.username.data][1])
         title = form.title.data
-        #image
-        photos.save(request.files['photo'])
-
         content = form.content.data
+        #image
+       # photos.save(request.files['photo'])
+#'photos' : photos
+        f = form.photos.data
+        filename = secure_filename(f.filename)
+        f.save('/static/uploaded_pics' + filename)
+        
         posts.insert(0, {
             'username': user,
             'title': title,
             'content': content,
-            'photos' : photos
+            'photos': f
         })
         
         flash(f'Blog created for {user}!', 'success')
         return redirect(url_for('home'))
     return render_template('blog.html', title='Blog', form=form)
 
+#Save user post
+def save_post_pic(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/uploaded_pics', picture_fn)
+    form_picture.save(picture_path)
+
+    return picture_fn
 
 #Save user profilepic
-
-def save_picture(form_picture):
+def save_profile_pic(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
@@ -116,13 +125,14 @@ def save_picture(form_picture):
     form_picture.save(picture_path)
 
     return picture_fn
+
 #User Account
 @app.route('/account', methods=['GET','POST'])
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.photo.data:
-            picture_file = save_picture(form.picture.data)
+            picture_file = save_profile_pic(form.picture.data)
             current_user.image_file = picture_file    
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -134,9 +144,6 @@ def account():
         form.email.data =current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file = image_file, form=form)    
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
