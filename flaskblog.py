@@ -5,23 +5,23 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import RegistrationForm, BlogForm, LoginForm, UpdateAccountForm
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField, FileAllowed
-from flask_uploads import IMAGES, UploadSet, configure_uploads
+from flask_uploads import IMAGES, UploadSet, configure_uploads, patch_request_class
 import os
 import secrets
+from flask_login import current_user, login_user, login_required
+from werkzeug.datastructures import CombinedMultiDict
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eca8a83f56f05a17a27d8076f0904b1f'
+#photo stuff
+app.config['UPLOADED_PHOTOS_DEST'] = os.getcwd()
 
-photos = UploadSet("photos", IMAGES)
-app.config["UPLOADED_PHOTOS_DEST"] = "static/uploaded_pics"
+photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
+patch_request_class(app)  # set maximum file size, default is 16MB
 
-#May delete
-UPLOAD_FOLDER = 'static/uploaded_pics'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 
 def allowed_file(filename):
@@ -40,6 +40,8 @@ posts = [
     }
 ]
 users = [(0, 'James'), (1, 'Jane')]
+
+categories= [(0, 'Bedroom'), (1, 'Washroom'), (2, 'Kitchen'), (3, 'Dining Room'), (4,'Garage') ,(5, 'Living Room'), (6, 'Recreational'), (7,'Laundry')]
 
 #Main Page
 @app.route("/")
@@ -76,6 +78,19 @@ def login():
             flash('Login unsuccessful. Please check email address and password', 'danger') 
     return render_template('login.html', title='Login', form=form)
 
+
+ #Logging out
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    #logout_user()
+    return redirect(url_for('home'))
+        
+
+#Add Post
+@app.route("/post", methods=['GET', 'POST'])
+def post():
+    return render_template('post.html', title='Post', posts=posts)   
+
 #Add Blog
 @app.route("/blog", methods=['GET', 'POST'])
 def blog():
@@ -83,28 +98,32 @@ def blog():
     #Blog
     form = BlogForm()
     form.username.choices = users
+    form.category.choices = categories
     if form.validate_on_submit():
+       # f = form.photo.data
+      #  filename = secure_filename(f.filename)
+      #  f.save(os.path.join(
+       #     app.instance_path, 'static/uploaded_pics', filename
+      #  ))
+        #filename = photos.save(form.photo.data)
+        #file_url = photos.url(filename)
         choices = form.username.choices
+        choices2 = form.category.choices
         user =  (choices[form.username.data][1])
+        category =  (choices2[form.category.data][1])
         title = form.title.data
         content = form.content.data
-        #image
-       # photos.save(request.files['photo'])
-#'photos' : photos
-        f = form.photos.data
-        filename = secure_filename(f.filename)
-        f.save('/static/uploaded_pics' + filename)
-        
+   
         posts.insert(0, {
             'username': user,
             'title': title,
             'content': content,
-            'photos': f
+            'category': category
         })
-        
-        flash(f'Blog created for {user}!', 'success')
         return redirect(url_for('home'))
-    return render_template('blog.html', title='Blog', form=form)
+    else:
+        file_url = None    
+    return render_template('blog.html', title='Blog', form=form, file_url=file_url)
 
 #Save user post
 def save_post_pic(form_picture):
@@ -128,6 +147,7 @@ def save_profile_pic(form_picture):
 
 #User Account
 @app.route('/account', methods=['GET','POST'])
+@login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
@@ -136,7 +156,7 @@ def account():
             current_user.image_file = picture_file    
         current_user.username = form.username.data
         current_user.email = form.email.data
-        db.session.commit()
+        #db.session.commit()
         flash('your account has been updated', 'success')
         return redirect(url_for('account'))
     elif request.method == 'GET':

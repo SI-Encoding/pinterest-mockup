@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css"
+href="{{ url_for('static', filename='post.css') }}">
+
+
+  <form method="POST" action="">
+
+
+    
+
+    <div class="container">
+        <div id="list" class="section">
+            <div class="item" style="height: 14em;">
+            <img src="{{url_for('static', filename='bedroom.jpg') }}">
+            </div>
+            <div class="item" style="height: 26em;"></div>
+            <div class="item" style="height: 8em;"></div>
+            <div class="item" style="height: 14em;"></div>
+            <div class="item" style="height: 8em;"></div>
+            <div class="item" style="height: 18em;"></div>
+            <div class="item" style="height: 16em;"></div>
+            <div class="item" style="height: 12em;"></div>
+        </div>		
+    </div>
+
+
+</form>
+
+
+
+
+
+
+
+
+    {% endblock content %}
