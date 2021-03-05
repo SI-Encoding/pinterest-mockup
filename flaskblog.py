@@ -10,9 +10,9 @@ import os
 import secrets
 from flask_login import current_user, login_user, login_required
 from werkzeug.datastructures import CombinedMultiDict
+import sqlite3
 
-
-
+conn = sqlite3.connect('blog.db')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eca8a83f56f05a17a27d8076f0904b1f'
 #photo stuff
@@ -23,7 +23,7 @@ configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
 
 
-
+    
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -47,6 +47,13 @@ categories= [(0, 'Bedroom'), (1, 'Washroom'), (2, 'Kitchen'), (3, 'Dining Room')
 @app.route("/")
 @app.route("/home")
 def home():
+    conn = sqlite3.connect('blog.db')
+
+    #Display all blogs from the 'blogs' table
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    c.execute("SELECT * FROM blogs")
+    posts = c.fetchall()
     return render_template('home.html', posts=posts)
 
 #Add Image
@@ -60,6 +67,14 @@ def upload():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        conn = sqlite3.connect('blog.db')
+        c = conn.cursor()
+        
+        #Add the new blog into the 'blogs' table
+        query = 'insert into users VALUES (?, ?, ?)'
+        c.execute(query, (form.username.data, form.email.data, form.password.data)) #Execute the query
+        conn.commit() #Commit the changes
+
         users.append((len(users), form.username.data))
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home'))
@@ -95,6 +110,14 @@ def post():
 @app.route("/blog", methods=['GET', 'POST'])
 def blog():
  
+    conn = sqlite3.connect('blog.db')
+
+    #Display all usernames stored in 'users' in the Username field
+    conn.row_factory = lambda cursor, row: row[0]
+    c = conn.cursor()
+    c.execute("SELECT username FROM users")
+    results = c.fetchall()
+    users = [(results.index(item), item) for item in results]
     #Blog
     form = BlogForm()
     form.username.choices = users
@@ -120,6 +143,10 @@ def blog():
             'content': content,
             'category': category
         })
+        #Add the new blog into the 'blogs' table in the database
+        query = 'insert into blogs (username, title, content) VALUES (?, ?, ?)' #Build the query
+        c.execute(query, (user, title, content)) #Execute the query
+        conn.commit() #Commit the changes
         return redirect(url_for('home'))
     else:
         file_url = None    
