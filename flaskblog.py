@@ -48,6 +48,13 @@ users = [(0, 'James'), (1, 'Jane')]
 
 categories= [(0, 'Bedroom'), (1, 'Washroom'), (2, 'Kitchen'), (3, 'Dining Room'), (4,'Garage') ,(5, 'Living Room'), (6, 'Recreational'), (7,'Laundry')]
 
+
+#Connecting to database
+def get_db_connection():
+    conn = sqlite3.connect('blog.db')
+    conn.row_factory = dict_factory
+    return conn
+
 #Main Page
 @app.route("/")
 @app.route("/home")
@@ -143,6 +150,7 @@ def blog():
         content = form.content.data
    
         posts.insert(0, {
+            'id': posts.size,
             'username': user,
             'title': title,
             'content': content,
@@ -196,6 +204,41 @@ def account():
         form.email.data =current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', title='Account', image_file = image_file, form=form)    
+
+
+@app.route('/delete/<postID>', methods=['POST'])
+def delete():
+    if request.method == 'POST':
+       
+        conn = sqlite3.connect('blog.db')
+        conn.row_factory = dict_factory
+        c = conn.cursor()
+        
+        post = conn.execute('SELECT * FROM blogs WHERE blogid = ?',
+                        (postID)).fetchone()
+        db.execute('DELETE FROM blogs WHERE blogid = ?', (postID))
+        db.commit()
+        db.close()
+        return render_template('home.html', posts=posts)
+  
+
+@app.route('/<int:id>/update', methods=('GET', 'POST'))
+def updateBlog(id):
+    """
+    update priority, begin_date, and end date of a task
+    :param conn:
+    :param task:
+    :return: project id
+    """
+    sql = ''' UPDATE tasks
+              SET priority = ? ,
+                  begin_date = ? ,
+                  end_date = ?
+              WHERE id = ?'''
+    cur = conn.cursor()
+    cur.execute(sql, task)
+    conn.commit()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

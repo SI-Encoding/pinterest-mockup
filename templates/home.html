@@ -6,6 +6,13 @@
     <div class="article-metadata">
       <a class="mr-2" href="#">Name:  {{ post.username }}</a> 
       <a style='margin-left:50px;' href="#">Category:  {{ post.category }}</a>
+      <form action= "/delete/{{ post.id }}" method="POST">
+        <input type="submit" value="Delete Post"
+                class="btn btn-danger btn-sm"
+                onclick="return confirm('Are you sure you want to delete this post?')">
+    </form>
+  
+      <a href='/update{{id}}' class='btn btn-outline-secondary btn-sm'>Update</a>
     </div>
     <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
    

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import  FileField, FileRequired, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextField, TextAreaField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_login import current_user
 from flask_uploads import UploadSet, IMAGES
@@ -26,6 +26,7 @@ class LoginForm(FlaskForm):
 
 #Form for making a new blog
 class BlogForm(FlaskForm):
+    id= HiddenField()
     username = SelectField('Username', choices=[], coerce=int)
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
