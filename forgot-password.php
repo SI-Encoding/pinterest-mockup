@@ -5,10 +5,10 @@
         <div class="page_banner bg_cover" style="background-image: url(assets/images/page-banner.jpg)">
             <div class="container">
                 <div class="page_banner_content">
-                    <h3 class="title">Login</h3>
+                    <h3 class="title">Forgot Password</h3>
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <li>Login</li>
+                        <li>Forgot Password</li>
                     </ul>
                 </div>
             </div>
@@ -19,32 +19,23 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-lg-5 col-md-7 col-sm-9">
+                    <!--- php start: error --->
                     <?php if(count($errors) > 0){ ?>
-
                         <div class="alert alert-danger text-center">
-                            <?php foreach($errors as $showerror){ echo $showerror; } ?>
+                            <?php foreach($errors as $error){ echo $error; } ?>
                         </div>
-
                     <?php } ?>
-					<div class="sign_in_form">
+                    <!--- php end: error --->
+                    <div class="sign_in_form">
 						<div class="sign_title">
-							<h5 class="title">Login Now</h5> </div>
-						<form action="login.php" method="POST" autocomplete="">
+							<h5 class="title">Forgot Password?</h5> </div>
+						<form action="forgot-password.php" method="POST" autocomplete="">
 							<div class="sign_form_wrapper">
 								<div class="single_form">
-									<input type="email" name="email" placeholder="Email Address" required value="<?php echo $email ?>"> <i class="fas fa-user"></i> </div>
+									<input type="email" name="email" placeholder="Enter email address" required value="<?php echo $email ?>"> 
+                                    <i class="fas fa-envelope"></i> </div>
 								<div class="single_form">
-									<input type="password" name="password" placeholder="Password" required> <i class="fas fa-key"></i> </div>
-								<div class="single_form d-sm-flex justify-content-between">
-									<div class="sign_checkbox">
-										<input type="checkbox" id="checkbox">
-										<label for="checkbox"></label> <span>Keep me logged in</span> 
-                                    </div>
-									<div class="sign_forgot"> <a href="forgot-password.php">Forgot Password?</a> 
-                                    </div>
-								</div>
-								<div class="single_form">
-									<button class="main-btn" type="submit" name="login" value="Login">Login</button>
+									<button class="main-btn" type="submit" name="check-email" value="Continue">Continue</button>
 								</div>
 							</div>
 						</form>

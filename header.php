@@ -89,11 +89,9 @@
                     </div>
 
                     <?php
-                    if(!isset($_SESSION)){
-                        session_start();
-                    }
-                    $email = $_SESSION['email'] ?? "";
-                    $password = $_SESSION['password'] ?? "";
+                    session_start();
+                    $email = $_SESSION['email'];
+                    $password = $_SESSION['password'];
                     if($email != false && $password != false){ ?>
 
                     <div class="navbar_btn">
@@ -104,14 +102,14 @@
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <ul>
-                                            <li><a href="dashboard.php"><i class="fas fa-tachometer-alt-average"></i> Dashboard</a></li>
+                                            <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                                             <li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
                                             <!-- <li><a href="my-ads.html"><i class="fas fa-layer-group"></i> My Ads</a></li>
                                             <li><a href="offermessages.html"><i class="fas fa-envelope"></i> Offers/Messages</a></li>
                                             <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
                                             <li><a href="favourite-ads.html"><i class="fas fa-heart"></i> My Favourites</a></li>
                                             <li><a href="privacy-setting.html"><i class="fas fa-star"></i> Privacy Settings</a></li> -->
-                                            <li><a href="logout.php"><i class="fas fa-sign-out"></i> Log Out</a></li>
+                                            <li><a href="logout.php"><i class="fas fa-door-open"></i> Log Out</a></li>
                                         </ul>
                                     </div>
                                 </div>

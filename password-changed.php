@@ -1,14 +1,19 @@
 <?php require_once "controller.php"; ?>
+<?php
+if($_SESSION['info'] == false){
+    header('Location: login.php');  
+}
+?>
 <?php include "header.php"; ?>
 
     <section>
         <div class="page_banner bg_cover" style="background-image: url(assets/images/page-banner.jpg)">
             <div class="container">
                 <div class="page_banner_content">
-                    <h3 class="title">Login</h3>
+                    <h3 class="title">New Password</h3>
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <li>Login</li>
+                        <li>New Password</li>
                     </ul>
                 </div>
             </div>
@@ -19,13 +24,13 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-lg-5 col-md-7 col-sm-9">
-                    <?php if(count($errors) > 0){ ?>
 
-                        <div class="alert alert-danger text-center">
-                            <?php foreach($errors as $showerror){ echo $showerror; } ?>
+                    <?php if(isset($_SESSION['info'])){ ?>
+                        <div class="alert alert-success text-center">
+                            <?php echo $_SESSION['info']; ?>
                         </div>
-
                     <?php } ?>
+
 					<div class="sign_in_form">
 						<div class="sign_title">
 							<h5 class="title">Login Now</h5> </div>
