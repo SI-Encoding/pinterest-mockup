@@ -1,5 +1,5 @@
 <?php require_once "controller.php"; ?>
-<?php include "header.php"?>
+<?php include "header.php"; ?>
 
     <section>
         <div class="page_banner bg_cover" style="background-image: url(assets/images/page-banner.jpg)">
@@ -67,4 +67,4 @@
 		</div>
 	</section>
 
-<?php include "footer.php"?>
+<?php include "footer.php"; ?>

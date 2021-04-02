@@ -1,9 +1,15 @@
 <?php
 
-const DB_HOST = 'localhost';
-const DB_USER = 'root';
-const DB_PASS = 'mysql';
-const DB_NAME = 'database';
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', 'mysql');
+define('DB_NAME', 'database');
 
-$con = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$con = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+// Check connection
+if($link === false){
+    die("ERROR: Could not connect. " . mysqli_connect_error());
+}
+
 ?>

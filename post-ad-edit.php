@@ -9,17 +9,14 @@ if ($email != false && $password != false)
 	if ($run_Sql)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
-        $id = $fetch_info['id'];
-		$name = $fetch_info['username'];
-		$fullname = $fetch_info['full_name'];
-		$phone = $fetch_info['phone'];
+        $user_id = $fetch_info['id'];
 		$status = $fetch_info['status'];
 		$code = $fetch_info['code'];
 		if ($status == "verified")
 		{
 			if ($code != 0)
 			{
-				header('Location: verify-code.php');
+				header('Location: password_reset.php');
 			}
 		}
 		else
@@ -48,7 +45,6 @@ else
             </div>
         </div>
     </section>
-
 
 	<section class="post_ads_page pt-70 pb-120">
 		<div class="container">
@@ -108,6 +104,10 @@ else
 							</div>
 							<div class="single_form">
 								<select>
+                                
+
+
+
 									<option value="none">Select Categories</option>
 									<option value="none">Mobiles</option>
 									<option value="none">Electronics</option>
@@ -172,7 +172,7 @@ else
 								<span>I agree to all Terms of Use & Posting Rules</span>
 							</div> -->
 							<div class="single_form">
-								<button class="main-btn" type="submit" name="postad" value="Post Ad">Post Ad</button>
+								<button class="main-btn" type="submit" name="editpost" value="Edit Ad Post">Post Ad</button>
 							</div>
 						</form>
 					</div>

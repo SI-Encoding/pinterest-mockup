@@ -1,24 +1,33 @@
 <?php require_once "controller.php"; ?>
-<?php 
+<?php
 $email = $_SESSION['email'];
 $password = $_SESSION['password'];
-if($email != false && $password != false){
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $run_Sql = mysqli_query($con, $sql);
-    if($run_Sql){
-        $fetch_info = mysqli_fetch_assoc($run_Sql);
-        $status = $fetch_info['status'];
-        $code = $fetch_info['code'];
-        if($status == "verified"){
-            if($code != 0){
-                header('Location: password_reset.php');
-            }
-        }else{
-            header('Location: user-otp.php');
-        }
-    }
-}else{
-    header('Location: login.php');
+if ($email != false && $password != false)
+{
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql = mysqli_query($con, $sql);
+	if ($run_Sql)
+	{
+		$fetch_info = mysqli_fetch_assoc($run_Sql);
+        $user_id = $fetch_info['id'];
+		$status = $fetch_info['status'];
+		$code = $fetch_info['code'];
+		if ($status == "verified")
+		{
+			if ($code != 0)
+			{
+				header('Location: password_reset.php');
+			}
+		}
+		else
+		{
+			header('Location: user-otp.php');
+		}
+	}
+}
+else
+{
+	header('Location: login.php');
 }
 ?>
 <?php include "header.php"; ?>
@@ -52,7 +61,7 @@ if($email != false && $password != false){
 							</div>
 							<div class="user_list">
 								<ul>
-									<li><a class="active" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+									<li><a class="active" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 									<li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
 									<!-- <li><a href="my-ads.html"><i class="fal fa-layer-group"></i> My Ads</a></li>
 									<li><a href="offermessages.html"><i class="fal fa-envelope"></i> Offers/Messages</a></li>
@@ -117,6 +126,27 @@ if($email != false && $password != false){
 									</tr>
 								</thead>
 								<tbody>
+
+                                <?php 
+                                    if (1 === 1){
+                                        $sql = "SELECT * FROM ad_listings WHERE user_id = '$user_id'";
+                                        $run_Sql = mysqli_query($con, $sql);
+                                        $fetch_info = mysqli_fetch_assoc($run_Sql);
+                                        $title = $fetch_info['title'];
+                                        $content = $fetch_info['content'];
+                                        $price = $fetch_info['price'];
+                                        $active_on = $fetch_info['active_on'];
+                                        $category_id = $fetch_info['category_id'];
+
+                                        $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
+                                        $run_sql_category = mysqli_query($con, $sql_category);
+                                        $fetch_info2 = mysqli_fetch_assoc($run_sql_category);
+                                        $category_name = $fetch_info2['name'];
+
+                                        //echo "$title, $content, $price, $price, $category_id, $category_name";
+                                    }
+                                ?>
+
 									<tr>
 										<td class="checkbox">
 											<div class="table_checkbox">
@@ -129,68 +159,38 @@ if($email != false && $password != false){
 										</td>
 										<td class="title">
 											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
+												<h6 class="titles"><?php echo "$title"; ?></h6>
 												<p>Ad ID: ng3D5hAMHPajQrM</p>
 											</div>
 										</td>
 										<td class="category">
 											<div class="table_category">
-												<p>Ram & Laptop</p>
+												<p><?php echo "$category_name"; ?></p>
 											</div>
 										</td>
 										<td class="status">
-											<div class="table_status"> <span class="active">active</span> </div>
+                                            <?php if ($active_on == 0) { ?>
+											<div class="table_status"> <span class="inactive">inactive</span> </div>
+                                            <?php } else { ?>
+                                            <div class="table_status"> <span class="active">active</span> </div>
+                                            <?php } ?>
 										</td>
 										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
+											<div class="table_price"> <span>$<?php echo "$price"; ?></span> </div>
 										</td>
 										<td class="action">
 											<div class="table_action">
+                                            <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
 													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
+													<li><button class="btn" type="submit" name="editpost" value="EditPost"><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
+													<li><button class="btn" type="submit" name="delete" value="Delete"><i class="fas fa-trash-alt"></i></button></li>
 												</ul>
+                                            </form>
 											</div>
 										</td>
 									</tr>
-									<tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox3">
-												<label for="checkbox3"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-2.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="active">active</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
+
 									<tr>
 										<td class="checkbox">
 											<div class="table_checkbox">
@@ -228,43 +228,7 @@ if($email != false && $password != false){
 											</div>
 										</td>
 									</tr>
-									<tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox5">
-												<label for="checkbox5"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-4.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="expired">Expired</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
+
 									<tr>
 										<td class="checkbox">
 											<div class="table_checkbox">

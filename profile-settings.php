@@ -1,27 +1,36 @@
 <?php require_once "controller.php"; ?>
-<?php 
+<?php
 $email = $_SESSION['email'];
 $password = $_SESSION['password'];
-if($email != false && $password != false){
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $run_Sql = mysqli_query($con, $sql);
-    if($run_Sql){
-        $fetch_info = mysqli_fetch_assoc($run_Sql);
-        $name = $fetch_info['username'];
-        $fullname = $fetch_info['full_name'];
-        $phone = $fetch_info['phone'];
-        $status = $fetch_info['status'];
-        $code = $fetch_info['code'];
-        if($status == "verified"){
-            if($code != 0){
-                header('Location: verify-code.php');
-            }
-        }else{
-            header('Location: user-otp.php');
-        }
-    }
-}else{
-    header('Location: login.php');
+if ($email != false && $password != false)
+{
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql = mysqli_query($con, $sql);
+	if ($run_Sql)
+	{
+		$fetch_info = mysqli_fetch_assoc($run_Sql);
+		$name = $fetch_info['username'];
+		$fullname = $fetch_info['full_name'];
+		$phone = $fetch_info['phone'];
+		$status = $fetch_info['status'];
+		$code = $fetch_info['code'];
+        $profile_image = $fetch_info['profile_image'];
+		if ($status == "verified")
+		{
+			if ($code != 0)
+			{
+				header('Location: verify-code.php');
+			}
+		}
+		else
+		{
+			header('Location: user-otp.php');
+		}
+	}
+}
+else
+{
+	header('Location: login.php');
 }
 ?>
 <?php include "header.php"?>
@@ -47,7 +56,7 @@ if($email != false && $password != false){
 					<div class="sidebar_profile mt-50">
 						<div class="profile_user">
 							<div class="user_author d-flex align-items-center">
-								<div class="author"> <img src="assets/images/author-1.jpg" alt=""> </div>
+								<div class="author"> <img src="profile_images/<?php echo "$profile_image" ?>" alt=""> </div>
 								<div class="user_content media-body">
 									<h6 class="author_name">User</h6>
 									<p><?php echo $fetch_info['username'] ?></p>
@@ -89,7 +98,7 @@ if($email != false && $password != false){
 					<div class="post_form mt-50">
 						<div class="post_title">
 							<h5 class="title">Profile Settings</h5> </div>
-						<form action="profile-settings.php" method="POST" autocomplete="">
+						<form action="profile-settings.php" method="POST" autocomplete="" enctype="multipart/form-data">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="single_form">
@@ -115,11 +124,24 @@ if($email != false && $password != false){
 									<div class="single_form">
 										<input class="form-control" type="password" name="cpassword" placeholder="Confirm password" required> </div>
 								</div>
-								<div class="col-md-6">
+                                <div class="col-md-6">
+									<div class="single_form">
+                                        <div class="post_upload_file">
+                                        <label for="upload">
+                                        <span>Select file for profile image</span>
+                                        <span></span>
+                                        <span class="main-btn">Select Files</span>
+                                        <span>Maximum upload file size: 500 KB</span>
+                                        <input type="file" name="file" id="upload">
+                                        </label>
+                                        </div>
+                                    </div>
+								</div>
+								<!-- <div class="col-md-6">
 									<div class="single_form">
 										<input type="checkbox" name="checkbox" id="checkbox">
 										<label for="checkbox"></label> <span>Subscribe me to Newsletter</span> </div>
-								</div>
+								</div> -->
 								<div class="col-md-6">
 									<div class="single_form">
 										<button class="main-btn" type="submit" name="update" value="Update">Update</button>

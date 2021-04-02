@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a class="sign-up" href="#">Post Ads</a></li>
+                            <li><a class="sign-up" href="post-ad.php">Post Ads</a></li>
                         </ul>
                     </div>
 

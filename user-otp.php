@@ -11,60 +11,49 @@ if($email == false){
         <div class="page_banner bg_cover" style="background-image: url(assets/images/page-banner.jpg)">
             <div class="container">
                 <div class="page_banner_content">
-                    <h3 class="title">Login</h3>
+                    <h3 class="title">Code Verification</h3>
                     <ul class="breadcrumb">
                         <li><a href="index.php">Home</a></li>
-                        <li>Login</li>
+                        <li>Code Verification</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Code Verification</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4 form">
-                <form action="user-otp.php" method="POST" autocomplete="off">
-                    <h2 class="text-center">Code Verification</h2>
-                    <?php 
-                    if(isset($_SESSION['info'])){ ?>
+    <section class="sign_in_area pt-120 pb-120">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-5 col-md-7 col-sm-9">
+
+                    <?php if(isset($_SESSION['info'])){ ?>
                         <div class="alert alert-success text-center">
                             <?php echo $_SESSION['info']; ?>
                         </div>
                     <?php } ?>
-                    <?php
-                    if(count($errors) > 0){
-                        ?>
+                    <?php if(count($errors) > 0){ ?>
                         <div class="alert alert-danger text-center">
-                            <?php
-                            foreach($errors as $showerror){
-                                echo $showerror;
-                            }
-                            ?>
+                            <?php foreach($errors as $showerror){ echo $showerror; } ?>
                         </div>
-                        <?php
-                    }
-                    ?>
-                    <div class="form-group">
-                        <input class="form-control" type="number" name="otp" placeholder="Enter verification code" required>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control button" type="submit" name="check" value="Submit">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-</body>
-</html>
+                    <?php } ?>
+
+                    <div class="sign_in_form">
+						<div class="sign_title">
+							<h5 class="title">Verify Code</h5> </div>
+						<form action="user-otp.php" method="POST" autocomplete="off">
+							<div class="sign_form_wrapper">
+								<div class="single_form">
+									<input type="number" name="otp" placeholder="Enter verification code" required> 
+                                    <i class="fas fa-key"></i> </div>
+								<div class="single_form">
+									<button class="main-btn" type="submit" name="check" value="Submit">Submit</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 <?php include "footer.php"; ?>
