@@ -1,139 +1,33 @@
+<?php require_once "controller.php"; ?>
+<?php include "header.php"?>
 
-    <?php include "header.php"?>
-    <!--====== CATEGORY PART START ======-->
 
-    <section class="category_area pt-115">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="section_title">
-                        <h3 class="title">Popular <br> Categories</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="category_wrapper d-flex flex-wrap justify-content-center pt-30">
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-camera"></i>   
-                        </div>
-                        <div class="content">
-                            <h6 class="title">DSLR Camera</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-mobile"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Cell Phone</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Laptop</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-headphones-alt"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Headphones</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-ring"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Jewelry</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Backpacks</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-bicycle"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Vehicles</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-door-open"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Furniture</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Gadgets</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
-                <div class="category-column">
-                    <div class="single_category text-center mt-30">
-                        <div class="icon">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <div class="content">
-                            <h6 class="title">Watches</h6>
-                        </div>
-                        <a href="product.html"></a>
-                    </div>
-                </div>
+<?php
+//$sql = "SELECT * FROM ad_listings WHERE user_id = '$user_id'";
+$sql = "SELECT * FROM ad_listings";
+$run_Sql = mysqli_query($con, $sql);
+//$row = mysqli_fetch_assoc($run_Sql);
+// $fetch_info = mysqli_fetch_assoc($run_Sql);
+// $title = $fetch_info['title'];
+// $content = $fetch_info['content'];
+// $price = $fetch_info['price'];
+//$active_on = $fetch_info['active_on'];
+//$category_id = $fetch_info['category_id'];
+?>
+<?php //while ($row = mysqli_fetch_assoc($run_Sql)): ?>
+<?php
+    $category_id = $row['category_id'];
+    $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
+    $run_sql_category = mysqli_query($con, $sql_category);
+    $fetch_info = mysqli_fetch_assoc($run_sql_category);
 
-                <div class="category_btn">
-                    <a class="main-btn" href="categories.html">View all Catagories</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!--====== CATEGORY PART ENDS ======-->
+    $listing_id = $row['id'];
+    $sql_image = "SELECT * FROM ad_images WHERE listing_id ='$listing_id'";
+    $run_sql_image = mysqli_query($con, $sql_image);
+    $fetch_image = mysqli_fetch_assoc($run_sql_image);
+?>
 
     <!--====== ADS PART START ======-->
-
     <section class="ads_area pt-70 pb-120">
         <div class="container">
             <div class="row">
@@ -159,25 +53,42 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="popular" role="tabpanel" aria-labelledby="popular-tab">
                         <div class="row">
+                            <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
+                            <?php
+                                $category_id = $row['category_id'];
+                                $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
+                                $run_sql_category = mysqli_query($con, $sql_category);
+                                $fetch_info = mysqli_fetch_assoc($run_sql_category);
+
+                                $listing_id = $row['id'];
+                                $sql_image = "SELECT * FROM ad_images WHERE listing_id ='$listing_id'";
+                                $run_sql_image = mysqli_query($con, $sql_image);
+                                $fetch_image = mysqli_fetch_assoc($run_sql_image);
+                            ?>
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single_ads_card mt-30">
                                     <div class="ads_card_image">
-                                        <img src="assets/images/ads-1.png" alt="ads">
+                                        <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads">
+                                        <?php if ($row['featured_on'] == 1) { ?>
+                                        <p class="sticker">Featured</p>
+                                        <?php } ?>
                                     </div>
                                     <div class="ads_card_content">
                                         <div class="meta d-flex justify-content-between">
-                                            <p>Gadgets</p>
+                                            <p><?php echo $fetch_info['name']; ?></p>
                                             <a class="like" href="#"><i class="fas fa-heart"></i></a>
                                         </div>
-                                        <h4 class="title"><a href="product-details.html">Nikon Camera</a></h4>
-                                        <p><i class="far fa-map"></i>New York, USA</p>
+                                        <h4 class="title"><a href="adpost.php?view=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a></h4>
+                                        <p><i class="far fa-map"></i><?php echo $row['city'],", ",$row['country']; ?></p>
                                         <div class="ads_price_date d-flex justify-content-between">
-                                            <span class="price">$129.00</span>
-                                            <span class="date">25 Jan, 2023</span>
+                                            <span class="price">$<?php echo $row['price']; ?></span>
+                                            <span class="date">25 Jan, 2023 <?php echo $row['created_at']; ?></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <?php endwhile ?>
+<!-- 
                             <div class="col-lg-3 col-sm-6">
                                 <div class="single_ads_card mt-30">
                                     <div class="ads_card_image">
@@ -189,7 +100,7 @@
                                             <p>Camera</p>
                                             <a class="like" href="#"><i class="fas fa-heart"></i></a>
                                         </div>
-                                        <h4 class="title"><a href="product-details.html">Fresh Digital Camera</a></h4>
+                                        <h4 class="title"><a href="product-details.html">Fresh Digital Camera <?php echo $row['title']; ?></a></h4>
                                         <p><i class="far fa-map"></i>New York, USA</p>
                                         <div class="ads_price_date d-flex justify-content-between">
                                             <span class="price">$99.00</span>
@@ -313,7 +224,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
+
                         </div>
                     </div>
                     <div class="tab-pane fade" id="featured" role="tabpanel" aria-labelledby="featured-tab">

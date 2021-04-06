@@ -12,11 +12,12 @@ if ($email != false && $password != false)
         $user_id = $fetch_info['id'];
 		$status = $fetch_info['status'];
 		$code = $fetch_info['code'];
+        $profile_image = $fetch_info['profile_image'];
 		if ($status == "verified")
 		{
 			if ($code != 0)
 			{
-				header('Location: password_reset.php');
+				header('Location: password-reset.php');
 			}
 		}
 		else
@@ -53,7 +54,7 @@ else
 					<div class="sidebar_profile mt-50">
 						<div class="profile_user">
 							<div class="user_author d-flex align-items-center">
-								<div class="author"> <img src="assets/images/author-1.jpg" alt=""> </div>
+								<div class="author"> <img src="profile_images/<?php echo "$profile_image" ?>" alt=""> </div>
 								<div class="user_content media-body">
 									<h6 class="author_name">User</h6>
 									<p><?php echo $fetch_info['username'] ?></p>
@@ -74,7 +75,15 @@ else
 						</div>
 					</div>
 				</div>
+
 				<div class="col-lg-9">
+
+                    <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-<?php echo $_SESSION['msg_type']; ?> text-center">
+                        <?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
+                    </div>
+                    <?php endif ?>
+
 					<div class="dashboard_content mt-50">
 						<div class="post_title">
 							<h5 class="title">Dashboard</h5> </div>
@@ -111,12 +120,12 @@ else
 							<table class="table">
 								<thead>
 									<tr>
-										<th class="checkbox">
+										<!-- <th class="checkbox">
 											<div class="table_checkbox">
 												<input type="checkbox" id="checkbox1">
 												<label for="checkbox1"></label>
 											</div>
-										</th>
+										</th> -->
 										<th class="photo">Photo</th>
 										<th class="title">Title</th>
 										<th class="category">Category</th>
@@ -128,70 +137,165 @@ else
 								<tbody>
 
                                 <?php 
-                                    if (1 === 1){
-                                        $sql = "SELECT * FROM ad_listings WHERE user_id = '$user_id'";
-                                        $run_Sql = mysqli_query($con, $sql);
-                                        $fetch_info = mysqli_fetch_assoc($run_Sql);
-                                        $title = $fetch_info['title'];
-                                        $content = $fetch_info['content'];
-                                        $price = $fetch_info['price'];
-                                        $active_on = $fetch_info['active_on'];
-                                        $category_id = $fetch_info['category_id'];
-
+                                    $sql = "SELECT * FROM ad_listings WHERE user_id = '$user_id'";
+                                    $run_Sql = mysqli_query($con, $sql);
+                                    // $fetch_info = mysqli_fetch_assoc($run_Sql);
+                                    // $title = $fetch_info['title'];
+                                    // $content = $fetch_info['content'];
+                                    // $price = $fetch_info['price'];
+                                    //$active_on = $fetch_info['active_on'];
+                                    //$category_id = $fetch_info['category_id'];
+                                ?>
+                                <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
+                                    <?php
+                                        $category_id = $row['category_id'];
                                         $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
                                         $run_sql_category = mysqli_query($con, $sql_category);
-                                        $fetch_info2 = mysqli_fetch_assoc($run_sql_category);
-                                        $category_name = $fetch_info2['name'];
-
-                                        //echo "$title, $content, $price, $price, $category_id, $category_name";
-                                    }
-                                ?>
-
-									<tr>
-										<td class="checkbox">
+                                        $fetch_info = mysqli_fetch_assoc($run_sql_category);
+                                    ?>
+                                    <tr>
+										<!-- <td class="checkbox">
 											<div class="table_checkbox">
 												<input type="checkbox" id="checkbox2">
 												<label for="checkbox2"></label>
 											</div>
-										</td>
+										</td> -->
 										<td class="photo">
 											<div class="table_photo"> <img src="assets/images/ads-1.png" alt="ads"> </div>
 										</td>
 										<td class="title">
 											<div class="table_title">
-												<h6 class="titles"><?php echo "$title"; ?></h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
+												<h6 class="titles"><?php echo $row['title']; ?></h6>
+												<p>Ad ID: <?php echo $row['id']; ?></p>
 											</div>
 										</td>
 										<td class="category">
 											<div class="table_category">
-												<p><?php echo "$category_name"; ?></p>
+												<p><?php echo $fetch_info['name']; ?></p>
 											</div>
 										</td>
 										<td class="status">
-                                            <?php if ($active_on == 0) { ?>
+                                            <?php if ($row['active_on'] == 0) { ?>
 											<div class="table_status"> <span class="inactive">inactive</span> </div>
                                             <?php } else { ?>
                                             <div class="table_status"> <span class="active">active</span> </div>
                                             <?php } ?>
 										</td>
 										<td class="price">
-											<div class="table_price"> <span>$<?php echo "$price"; ?></span> </div>
+											<div class="table_price"> <span>$<?php echo $row['price']; ?></span> </div>
 										</td>
 										<td class="action">
 											<div class="table_action">
                                             <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
 													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><button class="btn" type="submit" name="editpost" value="EditPost"><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><button class="btn" type="submit" name="delete" value="Delete"><i class="fas fa-trash-alt"></i></button></li>
+                                                    <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
+													<!-- <li><a href="dashboard.php?edit=<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li> -->
+													<li><a href="dashboard.php?delete=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
 												</ul>
                                             </form>
 											</div>
 										</td>
 									</tr>
 
-									<tr>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="id<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+<div class="col-lg">
+    <div class="post_form">
+        <div class="post_title">
+            <h5 class="title">Ad Detail</h5>
+        </div>
+        <form action="dashboard.php" method="POST" autocomplete="" enctype="multipart/form-data">
+            <div class="single_form">
+                <input type="text" name="id" value="<?php echo $row['id']; ?>" required>
+                <input type="text" name="title" placeholder="Title" value="<?php echo $row['title']; ?>" required>
+            </div>
+            <div class="single_form">
+                <select>
+                    <option value="none">Select Categories</option>
+                    <option value="none">Mobiles</option>
+                    <option value="none">Electronics</option>
+                    <option value="none">Real Estate</option>
+                    <option value="none">Vehicles</option>
+                </select>
+            </div>
+            <div class="single_form">
+                <input type="number" name="price" placeholder="Ad Your Price" value="<?php echo $row['price']; ?>" required>
+            </div>
+            <div class="single_form">
+                <textarea name="adpost" placeholder="Ad Post" required><?php echo $row['content']; ?></textarea>
+            </div>
+            <div class="post_upload_file">
+                <label for="upload">
+                <span>Select image to upload</span>
+                <span></span>
+                <span class="main-btn">Select Files</span>
+                <span>Maximum upload file size: 500 KB</span>
+                <input type="file" name="file" id="upload">
+                </label>
+            </div>
+        <!-- </form> -->
+    </div>
+</div>
+<div class="col-lg">
+    <div class="sidebar_post_form">
+        <div class="post_title">
+            <h5 class="title">Contact Detail</h5>
+        </div>
+        <!-- <form action="#"> -->
+            <div class="single_form">
+                <input type="text" name="phone" placeholder="Phone" value="<?php echo $row['phone']; ?>">
+            </div>
+            <div class="single_form">
+                <input type="email" name="email" placeholder="Email Address" required value="<?php echo $email ?>">
+            </div>
+            <div class="single_form">
+                <select name="country" required>
+                    <option value="Canada">Canada</option>
+                    <option value="United States">United States</option>
+                </select>
+            </div>
+            <div class="single_form">
+                <select name="state" required>
+                    <option value="British Columbia">British Columbia</option>
+                    <option value="Alberta">Alberta</option>
+                </select>
+            </div>
+            <div class="single_form">
+                <select name="city" required>
+                    <option value="Vancouver">Vancouver</option>
+                    <option value="Edmonton">Edmonton</option>
+                </select>
+            </div>
+            <div class="single_form">
+                <button class="main-btn" type="submit" name="update_ad" value="Post Ad">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                <?php endwhile; ?>
+
+                                    <!-- Button trigger modal -->
+                                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Launch demo modal
+                                    </button> -->
+
+									<!-- <tr>
 										<td class="checkbox">
 											<div class="table_checkbox">
 												<input type="checkbox" id="checkbox4">
@@ -227,9 +331,9 @@ else
 												</ul>
 											</div>
 										</td>
-									</tr>
+									</tr> -->
 
-									<tr>
+									<!-- <tr>
 										<td class="checkbox">
 											<div class="table_checkbox">
 												<input type="checkbox" id="checkbox6">
@@ -265,8 +369,8 @@ else
 												</ul>
 											</div>
 										</td>
-									</tr>
-									<tr>
+									</tr> -->
+									<!-- <tr>
 										<td class="checkbox">
 											<div class="table_checkbox">
 												<input type="checkbox" id="checkbox7">
@@ -339,7 +443,7 @@ else
 												</ul>
 											</div>
 										</td>
-									</tr>
+									</tr> -->
 								</tbody>
 							</table>
 						</div>

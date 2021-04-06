@@ -82,6 +82,8 @@ else
 				</div>
 				<div class="col-lg-5">
 
+                <?php echo $message['works']; ?>
+
                 <?php if(count($success) == 1){ ?>
 
                 <div class="alert alert-success text-center">

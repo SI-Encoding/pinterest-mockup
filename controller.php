@@ -6,8 +6,45 @@ $name = "";
 $errors = array();
 $success  = array();
 
+
+// Delete Ad Listing Button
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    if ($email != false && $password != false)
+	{
+        $sql = "DELETE FROM ad_listings WHERE id ='$id'";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "Listing has been deleted!";
+        $_SESSION['msg_type'] = "danger";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+
+}
+
+// Edit Ad Listing Button
+if (isset($_POST['edit'])) {
+    $id = $_POST['id'];
+    $title = $_POST['title'];
+	$price = $_POST['price'];
+    $adpost = $_POST['adpost'];
+    $phone = $_POST['phone'];
+	$email = $_POST['email'];
+    $country = $_POST['country'];
+    $state =  $_POST['state'];
+    $city = $_POST['city'];
+
+}
+
+
 // Edit Ad Post button
-if (isset($_POST['editpost'])) {
+if (isset($_POST['update_ad'])) {
 
     $file = $_FILES['file'];
     $fileName = $_FILES['file']['name'];
@@ -37,43 +74,46 @@ if (isset($_POST['editpost'])) {
 
         $category_id = "1";
 
-		$insert_data = "UPDATE `ad_listings` SET `category_id`= $category_id,`title`= $title,`content`= $adpost,`price`= $price,`country`= $country,`state`= $state,`city`= $city WHERE id = '$postid'";
+		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city' WHERE `id` = '$postid'";
 		$data_check = mysqli_query($con, $insert_data);
         
-        $success['db-error'] = "Ad Successfully Edited!";
+        $_SESSION['message'] = "Listing has been updated!";
+        $_SESSION['msg_type'] = "success";
 
-        // image upload
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-        $allowed = array('jpg', 'jpeg', 'png');
-        if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 1000000) {
-                    $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-                    $run_Sql = mysqli_query($con, $sql);
-                    $fetch_info = mysqli_fetch_assoc($run_Sql);
-                    $listing_id = $fetch_info['id'];
+        if ($_FILES['file']['tmp_name'] !='') {
+            // image upload
+            $fileExt = explode('.', $fileName);
+            $fileActualExt = strtolower(end($fileExt));
+            $allowed = array('jpg', 'jpeg', 'png');
+            if (in_array($fileActualExt, $allowed)) {
+                if ($fileError === 0) {
+                    if ($fileSize < 1000000) {
+                        $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
+                        $run_Sql = mysqli_query($con, $sql);
+                        $fetch_info = mysqli_fetch_assoc($run_Sql);
+                        $listing_id = $fetch_info['id'];
 
-                    $fileNameNew = uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'uploads/'.$fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
+                        $fileNameNew = uniqid('', true).".".$fileActualExt;
+                        $fileDestination = 'uploads/'.$fileNameNew;
+                        move_uploaded_file($fileTmpName, $fileDestination);
 
-                    $insert_data = "INSERT INTO ad_images (listing_id, image)
-                                    values('$listing_id', '$fileNameNew')";
-                    $data_check = mysqli_query($con, $insert_data);
+                        $insert_data = "INSERT INTO ad_images (listing_id, image)
+                                        values('$listing_id', '$fileNameNew')";
+                        $data_check = mysqli_query($con, $insert_data);
 
-                    $success['db-error'] = "Ad Successfully Posted!";
-    
+                        $success['db-error'] = "Ad Successfully Posted!";
+        
+                    } else {
+                        echo "File is too big!";
+                    }
                 } else {
-                    echo "File is too big!";
+                    echo "There was an error uploading!";
                 }
             } else {
-                echo "There was an error uploading!";
+                echo "You can not upload this file type!";
             }
-        } else {
-            echo "You can not upload this file type!";
+            // image upload end
         }
-        // image upload end
 	}
     else
     {
@@ -132,38 +172,42 @@ if (isset($_POST['postad']))
         
         $success['db-error'] = "Ad Successfully Posted!";
 
-        // image upload
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-        $allowed = array('jpg', 'jpeg', 'png');
-        if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 1000000) {
-                    $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-                    $run_Sql = mysqli_query($con, $sql);
-                    $fetch_info = mysqli_fetch_assoc($run_Sql);
-                    $listing_id = $fetch_info['id'];
+        if ($_FILES['file']['tmp_name'] !='') {
 
-                    $fileNameNew = uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'uploads/'.$fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
+            $message['works'] = "It worked!";
+            // image upload
+            $fileExt = explode('.', $fileName);
+            $fileActualExt = strtolower(end($fileExt));
+            $allowed = array('jpg', 'jpeg', 'png');
+            if (in_array($fileActualExt, $allowed)) {
+                if ($fileError === 0) {
+                    if ($fileSize < 1000000) {
+                        $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
+                        $run_Sql = mysqli_query($con, $sql);
+                        $fetch_info = mysqli_fetch_assoc($run_Sql);
+                        $listing_id = $fetch_info['id'];
 
-                    $insert_data = "INSERT INTO ad_images (listing_id, image)
-                                    values('$listing_id', '$fileNameNew')";
-                    $data_check = mysqli_query($con, $insert_data);
+                        $fileNameNew = uniqid('', true).".".$fileActualExt;
+                        $fileDestination = 'uploads/'.$fileNameNew;
+                        move_uploaded_file($fileTmpName, $fileDestination);
 
-                    $success['db-error'] = "Ad Successfully Posted!";
-    
+                        $insert_data = "INSERT INTO ad_images (listing_id, image)
+                                        values('$listing_id', '$fileNameNew')";
+                        $data_check = mysqli_query($con, $insert_data);
+
+                        $success['db-error'] = "Ad Successfully Posted!";
+        
+                    } else {
+                        echo "File is too big!";
+                    }
                 } else {
-                    echo "File is too big!";
+                    echo "There was an error uploading!";
                 }
             } else {
-                echo "There was an error uploading!";
+                echo "You can not upload this file type!";
             }
-        } else {
-            echo "You can not upload this file type!";
+            // image upload end
         }
-        // image upload end
 	}
     else
     {
