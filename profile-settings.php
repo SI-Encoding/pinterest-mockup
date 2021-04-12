@@ -14,6 +14,7 @@ if ($email != false && $password != false)
 		$phone = $fetch_info['phone'];
 		$status = $fetch_info['status'];
 		$code = $fetch_info['code'];
+		$updated = $fetch_info['updated_at'];
         $profile_image = $fetch_info['profile_image'];
 		if ($status == "verified")
 		{
@@ -79,6 +80,12 @@ else
 				</div>
 				<div class="col-lg-9">
 
+					<?php if (isset($_SESSION['message'])): ?>
+						<div class="alert alert-<?php echo $_SESSION['msg_type']; ?> text-center">
+							<?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
+						</div>
+                    <?php endif ?>
+
                     <?php if(count($errors) == 1){ ?>
 
                         <div class="alert alert-danger text-center">
@@ -97,7 +104,8 @@ else
 
 					<div class="post_form mt-50">
 						<div class="post_title">
-							<h5 class="title">Profile Settings</h5> </div>
+							<h5 class="title">Profile Settings</h5>  </div>
+							<br/><p>Updated at: <?php echo $updated; ?></p>
 						<form action="profile-settings.php" method="POST" autocomplete="" enctype="multipart/form-data">
 							<div class="row">
 								<div class="col-md-6">

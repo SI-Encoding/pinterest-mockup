@@ -50,10 +50,11 @@ else
 			<div class="row">
 				<div class="col-lg-12">
 					<nav class="nav nav-pills nav-justified">
+						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
 						<a class="nav-item nav-link active" href="category_list.php">Categories</a>
-						<a class="nav-item nav-link" href="#">Disabled</a>
+						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
 						<div class="profile_user">

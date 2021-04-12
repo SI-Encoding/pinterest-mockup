@@ -6,7 +6,9 @@ $name = "";
 $errors = array();
 $success  = array();
 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Delete Category Button
 if (isset($_GET['delete_category'])) {
@@ -71,6 +73,90 @@ if (isset($_GET['delete'])) {
 
 }
 
+// Ban AD Listing Button
+if (isset($_GET['ban'])) {
+    $id = $_GET['ban'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    if ($email != false && $password != false)
+	{
+        $sql = "UPDATE `ad_listings` SET `active_on` = 0 WHERE `id` = $id";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "Listing has been Banned and Deactivated!";
+        $_SESSION['msg_type'] = "success";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+
+}
+
+// Approve Ad Listing Button
+if (isset($_GET['approve'])) {
+    $id = $_GET['approve'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    if ($email != false && $password != false)
+	{
+        $sql = "UPDATE `ad_listings` SET `active_on` = 1 WHERE `id` = $id";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "Listing has been Approved and Activated!";
+        $_SESSION['msg_type'] = "success";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+
+}
+
+//Ban User Button
+if (isset($_GET['ban_user'])) {
+    $id = $_GET['ban_user'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    if ($email != false && $password != false)
+	{
+        $sql = "UPDATE `users` SET `banned_on` = 1 WHERE `id` = $id";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "User has been Banned and Deactivated!";
+        $_SESSION['msg_type'] = "success";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+
+}
+
+//UnBan User Button
+if (isset($_GET['unban_user'])) {
+    $id = $_GET['unban_user'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    if ($email != false && $password != false)
+	{
+        $sql = "UPDATE `users` SET `banned_on` = 0 WHERE `id` = $id";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "User has been Unbanned and Activated!";
+        $_SESSION['msg_type'] = "success";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+
+}
+
 // Update Cat Button
 if (isset($_POST['update_category'])) {
     $id = $_POST['id'];
@@ -120,7 +206,6 @@ if (isset($_POST['add_category'])) {
 
 }
 
-
 // Edit Ad Listing Button
 if (isset($_POST['edit'])) {
     $id = $_POST['id'];
@@ -135,18 +220,10 @@ if (isset($_POST['edit'])) {
 
 }
 
-
 // Edit Ad Post button
 if (isset($_POST['update_ad'])) {
 
-    $file = $_FILES['file'];
-    $fileName = $_FILES['file']['name'];
-    $fileTmpName = $_FILES['file']['tmp_name'];
-    $fileSize = $_FILES['file']['size'];
-    $fileError = $_FILES['file']['error'];
-    $fileType = $_FILES['file']['type'];
-
-    $postid = mysqli_real_escape_string($con, $_POST['id']);
+    $id = $_POST['id'];
     $title = mysqli_real_escape_string($con, $_POST['title']);
 	$price = mysqli_real_escape_string($con, $_POST['price']);
     $adpost = mysqli_real_escape_string($con, $_POST['adpost']);
@@ -156,24 +233,26 @@ if (isset($_POST['update_ad'])) {
     $state = mysqli_real_escape_string($con, $_POST['state']);
     $city = mysqli_real_escape_string($con, $_POST['city']);
 
+    $file = $_FILES[$id];
+    $fileName = $_FILES[$id]['name'];
+    $fileTmpName = $_FILES[$id]['tmp_name'];
+    $fileSize = $_FILES[$id]['size'];
+    $fileError = $_FILES[$id]['error'];
+    $fileType = $_FILES[$id]['type'];
+
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
     if ($email != false && $password != false)
 	{   
-        // $sql = "SELECT * FROM users WHERE email = '$email'";
-        // $run_Sql = mysqli_query($con, $sql);
-        // $fetch_info = mysqli_fetch_assoc($run_Sql);
-        // $user_id = $fetch_info['id'];
-
         $category_id = "1";
 
-		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city' WHERE id = '$postid'";
+		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city' WHERE id = '$id'";
 		$data_check = mysqli_query($con, $insert_data);
     
         $_SESSION['message'] = "Listing has been updated!";
         $_SESSION['msg_type'] = "success";
 
-        if ($_FILES['file']['tmp_name'] !='') {
+        if ($_FILES[$id]['tmp_name'] !='') {
 			// image upload
 			$fileExt = explode('.', $fileName);
 			$fileActualExt = strtolower(end($fileExt));
@@ -181,31 +260,37 @@ if (isset($_POST['update_ad'])) {
 			if (in_array($fileActualExt, $allowed)) {
 				if ($fileError === 0) {
 					if ($fileSize < 1000000) {
-						$sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-						$run_Sql = mysqli_query($con, $sql);
-						$fetch_info = mysqli_fetch_assoc($run_Sql);
-						$listing_id = $fetch_info['id'];
+						// $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
+						// $run_Sql = mysqli_query($con, $sql);
+						// $fetch_info = mysqli_fetch_assoc($run_Sql);
+						// $listing_id = $fetch_info['id'];
 
 						$fileNameNew = uniqid('', true).".".$fileActualExt;
 						$fileDestination = 'uploads/'.$fileNameNew;
 						move_uploaded_file($fileTmpName, $fileDestination);
 
 						$insert_data = "INSERT INTO ad_images (listing_id, image)
-										values('$listing_id', '$fileNameNew')";
+										values('$postid', '$fileNameNew')";
 						$data_check = mysqli_query($con, $insert_data);
 
 						$success['db-error'] = "Ad Successfully Posted!";
+						$_SESSION['message'] = "Ad Successfully Posted!";
+						$_SESSION['msg_type'] = "success";
 		
 					} else {
-						echo "File is too big!";
+						$_SESSION['message'] = "File is too big!";
 					}
 				} else {
-					echo "There was an error uploading!";
+					$_SESSION['message'] = "There was an error uploading!";
 				}
 			} else {
-				echo "You can not upload this file type!";
+				//$_SESSION['message'] = "You can not upload this file type!";
+				$_SESSION['message'] = "You can not";
 			}
 			// image upload end
+		} else {
+			$_SESSION['message'] = "Error";
+			$_SESSION['msg_type'] = "success";
 		}
 	}
     else

@@ -1,4 +1,37 @@
 <?php require_once "admin_controller.php"; ?>
+<?php
+$email = $_SESSION['email'];
+$password = $_SESSION['password'];
+if ($email != false && $password != false)
+{
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql = mysqli_query($con, $sql);
+	// if ($run_Sql)
+	// {
+	// 	$fetch_info = mysqli_fetch_assoc($run_Sql);
+    //     $user_id = $fetch_info['id'];
+	// 	$status = $fetch_info['role_id'];
+	// 	$code = $fetch_info['code'];
+    //     $profile_image = $fetch_info['profile_image'];
+	// 	if ($status == 0)
+	// 	{
+	// 		if ($code != 0)
+	// 		{
+	// 			header('Location: password-reset.php');
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		header('Location: user-otp.php');
+	// 	}
+	// }
+}
+else
+{
+	header('Location: index.php');
+}
+?>
+
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -90,9 +123,6 @@
                     </div>
 
                     <?php
-                    session_start();
-                    $email = $_SESSION['email'];
-                    $password = $_SESSION['password'];
                     if($email != false && $password != false){ ?>
 
                     <div class="navbar_btn">

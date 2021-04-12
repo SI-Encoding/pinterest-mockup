@@ -50,10 +50,11 @@ else
 			<div class="row">
 				<div class="col-lg-12">
 					<nav class="nav nav-pills nav-justified">
+						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link active" href="user_list.php">Users</a>
-						<a class="nav-item nav-link" href="#">Link</a>
-						<a class="nav-item nav-link disabled" href="#">Disabled</a>
+						<a class="nav-item nav-link" href="category_list.php">Categories</a>
+						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
 						<div class="profile_user">
@@ -94,28 +95,51 @@ else
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
+									<div class="box_icon"> <i class="fas fa-user"></i> </div>
 									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Total Ad Posted</a></h6>
-										<p>480 Add Posted</p>
+										<h6 class="title"><a href="#">Total Registered Users</a></h6>
+										<?php
+											$user_sql = "SELECT COUNT(*) AS count FROM `users` WHERE 1";
+											$user_run_Sql = mysqli_query($con, $user_sql);
+											while($row = mysqli_fetch_assoc($user_run_Sql)) {
+												$output = $row['count'];
+											}
+										?>
+										<p><?php echo $output;?> Users</p>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file"></i> </div>
+									<div class="box_icon"> <i class="fas fa-user"></i> </div>
 									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Featured Ads</a></h6>
-										<p>80 Add Posted</p>
+										<h6 class="title"><a href="#">Total Banned Users</a></h6>
+										<?php
+											$user_sql = "SELECT COUNT(*) AS count FROM `users` WHERE `banned_on` = 1";
+											$user_run_Sql = mysqli_query($con, $user_sql);
+											while($row = mysqli_fetch_assoc($user_run_Sql)) {
+												$banned_output = $row['count'];
+											}
+										?>
+										<p><?php echo $banned_output;?>  Users</p>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-envelope-open-text"></i> </div>
+									<div class="box_icon"> <i class="fas fa-user"></i> </div>
 									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Offers / Messages</a></h6>
-										<p>2040 Add Posted</p>
+										<h6 class="title"><a href="#">Total Verified Users</a></h6>
+										<?php
+											//$user_sql = "SELECT COUNT(*) AS count FROM `users` WHERE `status` = 'verified'";
+
+											$user_verified_sql = "SELECT COUNT(*) AS count FROM users as U WHERE U.status = 'verified'";
+											$user__verified_run_Sql = mysqli_query($con, $user_verified_sql);
+											while($row = mysqli_fetch_assoc($user__verified_run_Sql)) {
+												$verified_output = $row['count'];
+											}
+										?>
+										<p><?php echo $verified_output;?> Users</p>
 									</div>
 								</div>
 							</div>
@@ -125,12 +149,11 @@ else
 								<thead>
 									<tr>
 										<th class="id">id</th>
+										<th class="image">profile image</th>
 										<th class="username">username</th>
 										<th class="name">full name</th>
 										<th class="email">email</th>
 										<th class="phone">phone</th>
-										<!-- <th class="password">password</th> -->
-										<th class="image">profile image</th>
                                         <th class="status">status</th>
                                         <th class="banned">banned?</th>
                                         <th class="action">action</th>
@@ -144,8 +167,7 @@ else
                                 ?>
                                 <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
                                     <?php
-                                        $category_id = $row['category_id'];
-                                        $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
+                                        $sql_category = "SELECT * FROM category";
                                         $run_sql_category = mysqli_query($con, $sql_category);
                                         $fetch_info = mysqli_fetch_assoc($run_sql_category);
                                     ?>
@@ -153,6 +175,11 @@ else
 										<td class="id">
                                             <div class="table_title">
 												<p><?php echo $row['id']; ?></p>
+											</div>
+										</td>
+										<td class="status">
+                                            <div class="table_category">
+												<div class="author"> <img src="../profile_images/<?php echo $row['profile_image']; ?>" alt=""> </div>
 											</div>
 										</td>
 										<td class="user">
@@ -175,32 +202,29 @@ else
 												<p><?php echo $row['phone']; ?></p>
 											</div>
 										</td>
-										<!-- <td class="price">
-                                            <div class="table_category">
-												<p><?php echo $row['password']; ?></p>
-											</div>
-										</td> -->
-                                        <td class="status">
-                                            <div class="table_category">
-												<p><?php echo $row['profile_image']; ?></p>
-											</div>
-										</td>
+
                                         <td class="status">
                                             <div class="table_category">
 												<p><?php echo $row['status']; ?></p>
 											</div>
 										</td>
-                                        <td class="status">
-                                            <div class="table_category">
-												<p><?php echo $row['banned_on']; ?></p>
-											</div>
+										<td class="status">
+                                            <?php if ($row['banned_on'] == 0) { ?>
+											<div class="table_status"> <span class="active">active</span> </div>
+                                            <?php } else { ?>
+                                            <div class="table_status"> <span class="inactive">banned</span> </div>
+                                            <?php } ?>
 										</td>
 										<td class="action">
 											<div class="table_action">
                                             <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
-													<!-- <li><a href="#"><i class="fas fa-eye"></i></a></li> -->
                                                     <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
+													<?php if ($row['banned_on'] == 0) { ?>
+													<li><a href="user_list.php?ban_user=<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li>
+													<?php } else { ?>
+													<li><a href="user_list.php?unban_user=<?php echo $row['id']; ?>"><i class="fas fa-check-circle"></i></a></li>
+													<?php } ?>
 													<li><a href="user_list.php?delete_user=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
 												</ul>
                                             </form>

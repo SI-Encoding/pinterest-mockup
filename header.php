@@ -83,16 +83,15 @@
                                 <a href="#">Categories <span class="line"></span></a>
                             </li>
                             <li>
-                                <a href="#">Contact <span class="line"></span></a>
+                                <a href="contact.php">Contact <span class="line"></span></a>
                             </li>
                         </ul>
                     </div>
 
                     <?php
-                    session_start();
                     $email = $_SESSION['email'];
                     $password = $_SESSION['password'];
-                    if($email != false && $password != false){ ?>
+                    if($email != false && $password != false) { ?>
 
                     <div class="navbar_btn">
                         <ul>

@@ -1,5 +1,36 @@
 <?php include "header.php"; ?>
-
+<?php
+$email = $_SESSION['email'];
+$password = $_SESSION['password'];
+if ($email != false && $password != false)
+{
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql = mysqli_query($con, $sql);
+	if ($run_Sql)
+	{
+		$fetch_info = mysqli_fetch_assoc($run_Sql);
+        $user_id = $fetch_info['id'];
+		$status = $fetch_info['role_id'];
+		$code = $fetch_info['code'];
+        $profile_image = $fetch_info['profile_image'];
+		if ($status == 0)
+		{
+			if ($code != 0)
+			{
+				header('Location: password-reset.php');
+			}
+		}
+		else
+		{
+			header('Location: user-otp.php');
+		}
+	}
+}
+else
+{
+	header('Location: index.php');
+}
+?>
 	<section>
         <div class="page_banner bg_cover" style="background-image: url(assets/images/page-banner.jpg)">
             <div class="container">
@@ -19,11 +50,11 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<nav class="nav nav-pills nav-justified">
-						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
-						<a class="nav-item nav-link active" href="dashboard.php">Ad Listings</a>
+                        <a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
+						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
 						<a class="nav-item nav-link" href="category_list.php">Categories</a>
-						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
+						<a class="nav-item nav-link active" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
 						<div class="profile_user">
@@ -61,126 +92,54 @@
 					<div class="dashboard_content mt-20">
 						<div class="post_title">
 							<h5 class="title">Dashboard</h5> </div>
-						<div class="row">
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Total Created Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE 1";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Featured Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE `featured_on` = 1";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="pending_ads.php">Inactive Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE `active_on` = 0";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-						</div>
+
 						<div class="ads_table table-responsive mt-30">
 							<table class="table">
 								<thead>
 									<tr>
-										<th class="photo">Photo</th>
-										<th class="title">User</th>
-										<th class="title">Title</th>
-										<th class="category">Category</th>
-										<th class="status">Ad Status</th>
-										<th class="price">Price</th>
-										<th class="action">Action</th>
+										<th class="id">User id</th>
+
+                                        <th class="action">action</th>
 									</tr>
 								</thead>
 								<tbody>
 
-                                <?php
-									//print_r($fileName);
-                                    $sql = "SELECT * FROM ad_listings";
+                                <?php 
+                                    $sql = "SELECT DISTINCT user_id
+                                            FROM ad_listings AS A 
+                                            WHERE NOT EXISTS
+                                                (SELECT * 
+                                                    FROM category 
+                                                        WHERE NOT EXISTS
+                                                            (SELECT *
+                                                                FROM ad_listings AS B
+                                                                    WHERE (A.user_id = B.user_id)
+                                                                        AND (B.category_id = category.id)))";
                                     $run_Sql = mysqli_query($con, $sql);
                                 ?>
-                                <?php while ($row = mysqli_fetch_assoc($run_Sql)){ ?>
+                                <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
                                     <?php
-                                        $category_id = $row['category_id'];
-                                        $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
-                                        $run_sql_category = mysqli_query($con, $sql_category);
-                                        $fetch_info = mysqli_fetch_assoc($run_sql_category);
-
-										$listing_id = $row['id'];
-										$sql_image = "SELECT * FROM ad_images WHERE listing_id ='$listing_id'";
-										$run_sql_image = mysqli_query($con, $sql_image);
-										$fetch_image = mysqli_fetch_assoc($run_sql_image);
+                                        // $sql_category = "SELECT * FROM category";
+                                        // $run_sql_category = mysqli_query($con, $sql_category);
+                                        // $fetch_info = mysqli_fetch_assoc($run_sql_category);
                                     ?>
                                     <tr>
-										<td class="photo">
-											<div class="table_photo"> <img src="../uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads"> </div>
-										</td>
-										<td class="user">
-											<div class="table_title">
-												<h6 class="titles"><?php echo $row['user_id']; ?></h6>
+										<td class="id">
+                                            <div class="table_title">
+												<p><?php echo $row['user_id']; ?></p>
 											</div>
 										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles"><?php echo $row['title']; ?></h6>
-												<p>Ad ID: <?php echo $row['id']; ?></p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p><?php echo $fetch_info['name']; ?></p>
-											</div>
-										</td>
-										<td class="status">
-                                            <?php if ($row['active_on'] == 0) { ?>
-											<div class="table_status"> <span class="inactive">inactive</span> </div>
-                                            <?php } else { ?>
-                                            <div class="table_status"> <span class="active">active</span> </div>
-                                            <?php } ?>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$<?php echo $row['price']; ?></span> </div>
-										</td>
+
+
 										<td class="action">
 											<div class="table_action">
+                                            <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
-													<li><a href="../adpost.php?view=<?php echo $row['id']; ?>" target="_blank"><i class="fas fa-eye"></i></a></li>
+													<!-- <li><a href="#"><i class="fas fa-eye"></i></a></li> -->
                                                     <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="dashboard.php?ban=<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li>
-													<li><a href="dashboard.php?delete=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
+													<li><a href="user_list.php?delete_user=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
 												</ul>
+                                            </form>
 											</div>
 										</td>
 									</tr>
@@ -201,9 +160,7 @@
         <div class="post_title">
             <h5 class="title">Ad Detail</h5>
         </div>
-
-        <form action="dashboard.php" method="POST" enctype="multipart/form-data">
-
+        <form action="dashboard.php" method="POST" autocomplete="" enctype="multipart/form-data">
             <div class="single_form">
                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" required>
                 <input type="text" name="title" placeholder="Title" value="<?php echo $row['title']; ?>" required>
@@ -223,19 +180,26 @@
             <div class="single_form">
                 <textarea name="adpost" placeholder="Ad Post" required><?php echo $row['content']; ?></textarea>
             </div>
-
             <div class="post_upload_file">
                 <label for="upload">
                 <span>Select image to upload</span>
                 <span></span>
                 <span class="main-btn">Select Files</span>
                 <span>Maximum upload file size: 500 KB</span>
-                <input type="file" class="form-control-file" name="<?php echo $row['id']; ?>" id="upload">
+                <input type="file" name="file" id="upload">
                 </label>
             </div>
-
+        <!-- </form> -->
+    </div>
+</div>
+<div class="col-lg">
+    <div class="sidebar_post_form">
+        <div class="post_title">
+            <h5 class="title">Contact Detail</h5>
+        </div>
+        <!-- <form action="#"> -->
             <div class="single_form">
-                <input type="text" name="phone" placeholder="Phone">
+                <input type="text" name="phone" placeholder="Phone" value="<?php echo $row['phone']; ?>">
             </div>
             <div class="single_form">
                 <input type="email" name="email" placeholder="Email Address" required value="<?php echo $email ?>">
@@ -270,7 +234,7 @@
                                     </div>
                                     </div>
 
-                                <?php } ?>
+                                <?php endwhile; ?>
 
 
 								</tbody>
@@ -281,6 +245,5 @@
 			</div>
 		</div>
 	</section>
-
 
 <?php include "footer.php"; ?>

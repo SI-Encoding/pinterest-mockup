@@ -6,6 +6,36 @@ $name = "";
 $errors = array();
 $success  = array();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// User Comment Form
+if (isset($_POST['user_comment'])) {
+	$name = $_POST['name'];
+	$email = $_POST['email'];
+	$comment = $_POST['comment'];
+	//$rating = $_POST['rating'];
+
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+	if ($email != false && $password != false)
+	{
+		$listing_id = 4;
+		$user_id = 11;
+		$rating = 4;
+
+        $sql = "INSERT INTO `interact`(`listing_id`, `user_id`, `rating`, `comments`, `name`) VALUES ('$listing_id','$user_id','$rating','$comment','$name')";
+        $run_sql = mysqli_query($con, $sql);
+
+        $_SESSION['message'] = "Comment has been posted!";
+        $_SESSION['msg_type'] = "success";
+
+    } else {
+        $_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
+    }
+}
 
 // Delete Ad Listing Button
 if (isset($_GET['delete'])) {
@@ -74,7 +104,8 @@ if (isset($_POST['update_ad'])) {
 
         $category_id = "1";
 
-		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city' WHERE `id` = '$postid'";
+		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city', updated_at = CURRENT_TIMESTAMP
+						WHERE `id` = '$postid'";
 		$data_check = mysqli_query($con, $insert_data);
         
         $_SESSION['message'] = "Listing has been updated!";
@@ -244,10 +275,10 @@ if (isset($_POST['signup']))
 		{
 			$subject = "Email Verification Code";
 			$message = "Your verification code is $code";
-			$sender = "From: jasur88@gmail.com";
+			$sender = "From: admin@test.com";
 			if (mail($email, $subject, $message, $sender))
 			{
-				$info = "We've sent a verification code to your email - $email";
+				$info = "We've sent a verification code to your email - $email but for convenience here is the code $code";
 				$_SESSION['info'] = $info;
 				$_SESSION['email'] = $email;
 				$_SESSION['password'] = $password;
@@ -466,74 +497,67 @@ if (isset($_POST['update']))
 		{
 			$errors['password'] = "Confirm password not matched!";
 		}
+
+		// $email_check = "SELECT * FROM users WHERE email = '$email'";
+		// $res = mysqli_query($con, $email_check);
+		// if (mysqli_num_rows($res) > 0)
+		// {
+		// 	$errors['email'] = "Email that you have entered is already exist!";
+		// }
+
 		if (count($errors) === 0)
 		{
 			$encpass = password_hash($password, PASSWORD_BCRYPT);
 			//$code = rand(999999, 111111);
 			$session_email = $_SESSION['email'];
 			//$status = "notverified";
-			$insert_data = "UPDATE users SET username = '$name', full_name = '$fullname', phone = '$phone', password = '$encpass', email = '$email'
-                                WHERE email = '$session_email'";
+			$insert_data = "UPDATE users SET username = '$name', full_name = '$fullname', phone = '$phone', password = '$encpass', email = '$email', updated_at = CURRENT_TIMESTAMP
+                            WHERE email = '$session_email'";
 			$data_check = mysqli_query($con, $insert_data);
 
-            // image upload
-            $fileExt = explode('.', $fileName);
-            $fileActualExt = strtolower(end($fileExt));
-            $allowed = array('jpg', 'jpeg', 'png');
-            if (in_array($fileActualExt, $allowed)) {
-                if ($fileError === 0) {
-                    if ($fileSize < 1000000) {
-                        // $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-                        // $run_Sql = mysqli_query($con, $sql);
-                        // $fetch_info = mysqli_fetch_assoc($run_Sql);
-                        // $listing_id = $fetch_info['id'];
+			$_SESSION['message'] = "Profile has been updated!";
+			$_SESSION['msg_type'] = "success";
 
-                        $fileNameNew = uniqid('', true).".".$fileActualExt;
-                        $fileDestination = 'profile_images/'.$fileNameNew;
-                        move_uploaded_file($fileTmpName, $fileDestination);
+			if ($_SESSION['email'] != $email)
+			{
+				$_SESSION['email'] = $email;
+			}
 
-                        $insert_data = "UPDATE users SET profile_image = '$fileNameNew'
-                                        WHERE email = '$session_email'";
-                        $data_check = mysqli_query($con, $insert_data);
+			if ($_FILES['file']['tmp_name'] !='') {
+				// image upload
+				$fileExt = explode('.', $fileName);
+				$fileActualExt = strtolower(end($fileExt));
+				$allowed = array('jpg', 'jpeg', 'png');
+				if (in_array($fileActualExt, $allowed)) {
+					if ($fileError === 0) {
+						if ($fileSize < 1000000) {
+							// $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
+							// $run_Sql = mysqli_query($con, $sql);
+							// $fetch_info = mysqli_fetch_assoc($run_Sql);
+							// $listing_id = $fetch_info['id'];
 
-                        $errors['db-error'] = "Ad Successfully Posted!";
-        
-                    } else {
-                        $errors['db-error'] = "File is too big!";
-                    }
-                } else {
-                    $errors['db-error'] = "There was an error uploading!";
-                }
-            } else {
-                $errors['db-error'] = "You can not upload this file type!";
-            }
-            // image upload end
+							$fileNameNew = uniqid('', true).".".$fileActualExt;
+							$fileDestination = 'profile_images/'.$fileNameNew;
+							move_uploaded_file($fileTmpName, $fileDestination);
 
+							$insert_data = "UPDATE users SET profile_image = '$fileNameNew'
+											WHERE email = '$session_email'";
+							$data_check = mysqli_query($con, $insert_data);
 
-			// if ($data_check)
-			// {
-			// 	$subject = "Email Verification Code";
-			// 	$message = "Your verification code is $code";
-			// 	$sender = "From: jasur88@gmail.com";
-			// 	if (mail($email, $subject, $message, $sender))
-			// 	{
-			// 		$info = "We've sent a verification code to your email - $email";
-			// 		$_SESSION['info'] = $info;
-			// 		$_SESSION['email'] = $email;
-			// 		$_SESSION['password'] = $password;
-			// 		header('location: profile-settings.php');
-			// 		//exit();
-					
-			// 	}
-			// 	else
-			// 	{
-			// 		$errors['otp-error'] = "Failed while sending code!";
-			// 	}
-			// }
-			// else
-			// {
-			// 	$errors['db-error'] = "Failed while inserting data into database!";
-			// }
+							$errors['db-error'] = "Ad Successfully Posted!";
+			
+						} else {
+							$errors['db-error'] = "File is too big!";
+						}
+					} else {
+						$errors['db-error'] = "There was an error uploading!";
+					}
+				} else {
+					$errors['db-error'] = "You can not upload this file type!";
+				}
+            	// image upload end
+			}
+
 		}
 	}
 

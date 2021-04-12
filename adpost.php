@@ -1,4 +1,36 @@
 <?php require_once "controller.php"; ?>
+<?php
+$email = $_SESSION['email'];
+$password = $_SESSION['password'];
+if ($email != false && $password != false)
+{
+	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql = mysqli_query($con, $sql);
+	if ($run_Sql)
+	{
+		$fetch_info = mysqli_fetch_assoc($run_Sql);
+        $user_id = $fetch_info['id'];
+		$status = $fetch_info['status'];
+		$code = $fetch_info['code'];
+        $profile_image = $fetch_info['profile_image'];
+		if ($status == "verified")
+		{
+			if ($code != 0)
+			{
+				header('Location: verify-code.php');
+			}
+		}
+		else
+		{
+			header('Location: user-otp.php');
+		}
+	}
+}
+else
+{
+	header('Location: login.php');
+}
+?>
 <?php include "header.php"; ?>
 
 <?php
@@ -9,6 +41,16 @@ if (isset($_GET['view'])) {
     $run_Sql = mysqli_query($con, $sql);
     $fetch_info = mysqli_fetch_assoc($run_Sql);
 
+    $sql_image = "SELECT * FROM ad_images WHERE listing_id = '$id'";
+    $run_Sql_image = mysqli_query($con, $sql_image);
+    $fetch_image = mysqli_fetch_assoc($run_Sql_image);
+
+    $sql_comment = "SELECT * FROM `interact` WHERE listing_id = '$id'";
+    $run_Sql_comment = mysqli_query($con, $sql_comment);
+    
+    $sql_rating = "SELECT AVG(i.rating) AS rating FROM interact AS i WHERE listing_id = '$id'";
+    $run_Sql_rating = mysqli_query($con, $sql_rating);
+    $fetch_rating = mysqli_fetch_assoc($run_Sql_rating);
 } else {
 
     $sql = "SELECT * FROM ad_listings";
@@ -17,7 +59,7 @@ if (isset($_GET['view'])) {
 }
 ?>
 
-<section class="product_details_page pt-70 pb-120">
+    <section class="product_details_page pt-70 pb-120">
         <div class="container">
             <div class="row">
 
@@ -26,7 +68,7 @@ if (isset($_GET['view'])) {
                         <div class="product_image">
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="details-1" role="tabpanel" aria-labelledby="details-1-tab">
-                                    <img src="uploads/606bb0294e9625.52247787.jpg" alt="product details">
+                                    <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="product details">
                                     <ul class="sticker">
                                     <?php if ($fetch_info['featured_on'] == 1) { ?>
                                         <li>Featured</li>
@@ -80,9 +122,41 @@ if (isset($_GET['view'])) {
                     <div class="product_rating mt-30">
                         <div class="product_rating_top_bar">
                             <div class="product_details_title">
-                                <h5 class="title">1 Review :</h5>
+                            <?php 
+                            $sql_comment_count = "  SELECT I.listing_id, COUNT(DISTINCT I.comments) AS comments
+                                                    FROM ad_listings as A, interact AS I
+                                                    WHERE I.comments != ''
+                                                    GROUP BY I.listing_id ";
+                            $run_Sql_comment_count = mysqli_query($con, $sql_comment_count);
+                            $fetch_comment_count = mysqli_fetch_assoc($run_Sql_comment_count);
+
+                            ?>
+                                <h5 class="title">Comments (<?php echo $fetch_comment_count['comments']; ?>) :</h5>
                             </div>
                             <div class="product_rating_star">
+                            <?php if ($fetch_rating['rating'] < 2) { ?>
+                                <ul>
+                                    <li><i class="fa fa-star"></i></li>
+                                </ul>
+                            <?php } elseif ($fetch_rating['rating'] < 3) { ?>
+                                <ul>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                </ul>
+                            <?php } elseif ($fetch_rating['rating'] < 4) { ?>
+                                <ul>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                </ul>
+                            <?php } elseif ($fetch_rating['rating'] < 5) { ?>
+                                <ul>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                    <li><i class="fa fa-star"></i></li>
+                                </ul>
+                            <?php } else { ?>
                                 <ul>
                                     <li><i class="fa fa-star"></i></li>
                                     <li><i class="fa fa-star"></i></li>
@@ -90,32 +164,47 @@ if (isset($_GET['view'])) {
                                     <li><i class="fa fa-star"></i></li>
                                     <li><i class="fa fa-star"></i></li>
                                 </ul>
+                            <?php } ?>
                             </div>
                         </div>
-                        <div class="single_rating_author mt-30">
+                        <?php while ($fetch_comment = mysqli_fetch_assoc($run_Sql_comment)){ ?>
+                        <div class="single_rating_author mt-50">
                             <div class="rating_author d-flex align-items-center">
                                 <div class="author_image">
                                     <img src="assets/images/author-1.jpg" alt="author">
                                 </div>
                                 <div class="author_content media-body">
-                                    <h5 class="author_name">Angel Grantham</h5>
+                                    <h5 class="author_name"><?php echo $fetch_comment['name']; ?></h5>
                                     <span class="date">25 January, 2023</span>
-                                    <ul class="rating_star">
-                                        <li><i class="fa fa-star"></i></li>
-                                        <li><i class="fa fa-star"></i></li>
-                                        <li><i class="fa fa-star"></i></li>
-                                        <li><i class="fa fa-star"></i></li>
-                                        <li><i class="fa fa-star"></i></li>
-                                    </ul>
+                                    <?php if ($fetch_comment['rating'] == 5) { ?>
+                                        <ul class="rating_star">
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                        </ul>
+                                    <?php } else { ?>
+                                        <ul class="rating_star">
+                                            <li><i class="fa fa-star"></i></li>
+                                        </ul>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="rating_description">
-                                <p>That, sleep. Reposed that considerable, found a failing. In a means, turned would according of semantics, far were remember support from waved. had to of fully then can name blocks being her not in afforded. devotion logged
-                                    to and remember and the of in the language would </p>
+                                <p><?php echo $fetch_comment['comments']; ?></p>
                             </div>
                         </div>
+                        <?php } ?>
+
                     </div>
-                    <div class="product_rating_form mt-30">
+                    <br/>
+                    <?php if (isset($_SESSION['message'])): ?>
+                        <div class="alert alert-<?php echo $_SESSION['msg_type']; ?> text-center">
+                            <?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
+                        </div>
+                    <?php endif ?>
+                    <div class="product_rating_form mt-20">
                         <div class="product_details_title">
                             <h5 class="title">Leave Your Review :</h5>
                         </div>
@@ -143,7 +232,7 @@ if (isset($_GET['view'])) {
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
-                                    <i class="fal fa-star"></i>
+                                    <!-- <i class="fas fa-star"></i> -->
                                     </span>
                                         </li>
                                         <li>
@@ -153,8 +242,8 @@ if (isset($_GET['view'])) {
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
+                                    <!-- <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i> -->
                                     </span>
                                         </li>
                                         <li>
@@ -163,9 +252,9 @@ if (isset($_GET['view'])) {
                                             <span>
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
+                                    <!-- <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i> -->
                                     </span>
                                         </li>
                                         <li>
@@ -173,38 +262,38 @@ if (isset($_GET['view'])) {
                                             <label for="radio5"></label>
                                             <span>
                                     <i class="fa fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
-                                    <i class="fal fa-star"></i>
+                                    <!-- <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i> -->
                                     </span>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="product_details_form">
-                                <form action="#">
+                                <form action="adpost.php?view=4" method="POST" autocomplete="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="single_form">
-                                                <input type="text" placeholder="Enter your name . . .">
-                                                <i class="fal fa-user"></i>
+                                                <input name="name" type="text" placeholder="Enter your name . . .">
+                                                <i class="fas fa-user"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="single_form">
-                                                <input type="text" placeholder="Enter your mail address . . .">
-                                                <i class="fal fa-envelope"></i>
+                                                <input name="email" type="text" placeholder="Enter your mail address . . .">
+                                                <i class="fas fa-envelope"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="single_form">
-                                                <textarea placeholder="Type your review . . ."></textarea>
+                                                <textarea name="comment" placeholder="Type your review . . ."></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="single_form">
-                                                <button class="main-btn">Submit</button>
+                                                <button type="submit" name="user_comment" class="main-btn">Submit</button>
                                             </div>
                                         </div>
                                     </div>
@@ -225,10 +314,10 @@ if (isset($_GET['view'])) {
                                     <div class="ads_card_content">
                                         <div class="meta d-flex justify-content-between">
                                             <p>Ram & Laptop</p>
-                                            <a class="like" href="#"><i class="fal fa-heart"></i></a>
+                                            <a class="like" href="#"><i class="fas fa-heart"></i></a>
                                         </div>
                                         <h4 class="title"><a href="product-details.html">8 GB DDR4 Ram, 4th Gen</a></h4>
-                                        <p><i class="far fa-map-marker-alt"></i>New York, USA</p>
+                                        <p><i class="far fa-map"></i>New York, USA</p>
                                         <div class="ads_price_date d-flex justify-content-between">
                                             <span class="price">$299.00</span>
                                             <span class="date">25 Jan, 2023</span>
@@ -245,10 +334,10 @@ if (isset($_GET['view'])) {
                                     <div class="ads_card_content">
                                         <div class="meta d-flex justify-content-between">
                                             <p>Ram & Laptop</p>
-                                            <a class="like" href="#"><i class="fal fa-heart"></i></a>
+                                            <a class="like" href="#"><i class="fas fa-heart"></i></a>
                                         </div>
                                         <h4 class="title"><a href="product-details.html">8 GB DDR4 Ram, 4th Gen</a></h4>
-                                        <p><i class="far fa-map-marker-alt"></i>New York, USA</p>
+                                        <p><i class="far fa-map"></i>New York, USA</p>
                                         <div class="ads_price_date d-flex justify-content-between">
                                             <span class="price">$299.00</span>
                                             <span class="date">25 Jan, 2023</span>
@@ -264,10 +353,10 @@ if (isset($_GET['view'])) {
                                     <div class="ads_card_content">
                                         <div class="meta d-flex justify-content-between">
                                             <p>Ram & Laptop</p>
-                                            <a class="like" href="#"><i class="fal fa-heart"></i></a>
+                                            <a class="like" href="#"><i class="fas fa-heart"></i></a>
                                         </div>
                                         <h4 class="title"><a href="product-details.html">8 GB DDR4 Ram, 4th Gen</a></h4>
-                                        <p><i class="far fa-map-marker-alt"></i>New York, USA</p>
+                                        <p><i class="far fa-map"></i>New York, USA</p>
                                         <div class="ads_price_date d-flex justify-content-between">
                                             <span class="price">$299.00</span>
                                             <span class="date">25 Jan, 2023</span>
@@ -290,12 +379,17 @@ if (isset($_GET['view'])) {
                             </div>
                             <div class="product_owner_wrapper mt-20">
                                 <div class="owner_author d-flex align-items-center">
+                                    <?php 
+                                        $user_listing_id = $fetch_info['user_id'];
+                                        $sql_user = "SELECT * FROM `users` WHERE `id` = '$user_listing_id'";
+                                        $run_Sql_user = mysqli_query($con, $sql_user);
+                                        $fetch_user = mysqli_fetch_assoc($run_Sql_user);
+                                    ?>
                                     <div class="author_image">
-                                        <img src="assets/images/author-2.jpg" alt="author">
+                                        <img src="profile_images/<?php echo $fetch_user['profile_image']; ?>" alt="author">
                                     </div>
                                     <div class="author_content media-body">
-                                        <h5 class="author_name">Angel Grantham</h5>
-                                        <p>Member Since 2014</p>
+                                        <h5 class="author_name"><?php echo $fetch_user['full_name']; ?></h5>
                                     </div>
                                 </div>
                                 <div class="owner_address d-flex">
@@ -303,13 +397,14 @@ if (isset($_GET['view'])) {
                                         <i class="far fa-map-marker-alt"></i>
                                     </div>
                                     <div class="address_content media-body">
-                                        <p>2202 Pooh Bear Lane, Maine 3818 Oxford Court, BOISE</p>
-                                        <a href="#">View Store</a>
+                                        <p><i class="far fa-map"></i> <?php echo $fetch_info['city'].', '.$fetch_info['country']; ?></p>
                                     </div>
                                 </div>
+                                <?php if ($fetch_info['phone'] !="") { ?>
                                 <div class="owner_call">
-                                    <a class="main-btn" href="#"><i class="fas fa-phone"></i> Click to See Number</a>
+                                    <a class="main-btn" href="#"><i class="fas fa-phone"></i><?php echo $fetch_info['phone'];?></a>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="product_sidebar_contact mt-30">
