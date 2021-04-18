@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 14, 2021 at 05:43 AM
+-- Host: localhost
+-- Generation Time: Apr 18, 2021 at 07:29 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.11
 
@@ -30,19 +30,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
-  `username` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+  `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `admins`
 --
 
-INSERT INTO `admins` (`id`, `username`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'test@test.com', '$2y$10$yb1Laf9t.TDsw9BA6J7ChOnqTPRrzaNEQ8SuMJn17avCOU4Y/4Uce', '2021-04-03 07:00:00', '2021-04-03 07:00:00');
+INSERT INTO `admins` (`id`, `username`, `email`, `password`, `created_at`) VALUES
+(1, 'admin', 'test@test.com', '$2y$10$yb1Laf9t.TDsw9BA6J7ChOnqTPRrzaNEQ8SuMJn17avCOU4Y/4Uce', '2021-04-03 07:00:00');
 
 -- --------------------------------------------------------
 
@@ -53,7 +52,7 @@ INSERT INTO `admins` (`id`, `username`, `email`, `password`, `created_at`, `upda
 CREATE TABLE `ad_images` (
   `id` int(11) NOT NULL,
   `listing_id` int(11) NOT NULL,
-  `image` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `image` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -63,8 +62,12 @@ CREATE TABLE `ad_images` (
 --
 
 INSERT INTO `ad_images` (`id`, `listing_id`, `image`, `created_at`, `updated_at`) VALUES
+(2, 7, 'bike.jpg', '2021-04-18 19:23:35', '2021-04-18 19:23:35'),
 (6, 9, '606bb0294e9625.52247787.jpg', '2021-04-06 00:49:45', '2021-04-06 00:49:45'),
-(7, 4, '606bbfe6071325.01589710.png', '2021-04-06 01:56:54', '2021-04-06 01:56:54');
+(7, 4, '60789677939263.41219116.jpg', '2021-04-06 01:56:54', '2021-04-06 01:56:54'),
+(8, 49, '607c855e4c2c99.21055444.jpg', '2021-04-18 19:15:42', '2021-04-18 19:15:42'),
+(9, 50, '607c86179b7508.93890607.jpg', '2021-04-18 19:18:47', '2021-04-18 19:18:47'),
+(10, 8, 'iphone.jpg.png', '2021-04-18 19:26:22', '2021-04-18 19:26:22');
 
 -- --------------------------------------------------------
 
@@ -76,14 +79,13 @@ CREATE TABLE `ad_listings` (
   `id` int(11) NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
-  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `content` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `price` decimal(12,2) NOT NULL,
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `state` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `city` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `approval_on` int(1) NOT NULL DEFAULT '0',
+  `country` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `state` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `active_on` int(1) NOT NULL DEFAULT '1',
   `featured_on` int(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -94,41 +96,18 @@ CREATE TABLE `ad_listings` (
 -- Dumping data for table `ad_listings`
 --
 
-INSERT INTO `ad_listings` (`id`, `category_id`, `user_id`, `title`, `content`, `price`, `phone`, `country`, `state`, `city`, `approval_on`, `active_on`, `featured_on`, `created_at`, `updated_at`) VALUES
-(4, 8, 1, 'Nikon Camera', 'Dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt. ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam. et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore', '78.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 1, 1, '2021-03-31 02:20:52', '2021-04-13 05:37:30'),
-(5, 1, 2, 'iPhone X Fresh', 'gfdjgdfjgdlkf klfdgjkldf', '897.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 0, 0, 0, '2021-03-31 02:24:06', '2021-03-31 02:24:06'),
-(6, 1, 2, 'High-performance Bi-Cycle', 'fdsgs', '234.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 1, 1, 1, '2021-03-31 02:25:47', '2021-03-31 02:25:47'),
-(7, 1, 2, 'KTM 800CC Bike', 'tertert', '555.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 1, 0, '2021-04-01 20:48:20', '2021-04-01 20:48:20'),
-(8, 1, 2, 'MacBook Pro - 8 GB / 256GB', 'fdsfsdf', '4444.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 1, 0, '2021-04-01 20:52:49', '2021-04-01 20:52:49'),
-(9, 1, 1, 'Samsung Glalaxy S8', '3453453dgfg', '100.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 0, 1, 1, '2021-04-02 01:24:16', '2021-04-02 01:24:16'),
-(10, 1, 1, 'Fresh Digital Camera', 'fsdfdsf2121212fdsfsdfsdfsd', '4000.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 1, 0, '2021-04-02 01:28:07', '2021-04-02 01:28:07'),
-(15, 1, 1, '8 GB DDR4 Ram, 4th Gen', 'dfsdf fdsfjh jdhsfkjshdf', '43.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 1, 0, '2021-04-03 23:29:59', '2021-04-03 23:29:59'),
-(16, 1, 1, 'wwwwww', 'Nam non maximus nulla. Etiam id sapien at turpis ultrices pharetra. Morbi ullamcorper sit amet purus in volutpat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam euismod nibh ac sapien aliquam convallis. Pellentesque a ipsum lorem. Phasellus orci leo, accumsan eget scelerisque non, porttitor vitae risus. Mauris congue vitae est blandit tristique.', '98.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 0, 1, '2021-04-03 23:40:03', '2021-04-03 23:40:03'),
-(17, 1, 1, 'ererererere', 'popopoprere', '45.00', '', 'Canada', 'British Columbia', 'Vancouver', 0, 0, 0, '2021-04-03 23:42:06', '2021-04-03 23:42:06'),
-(22, 3, 1, 'jhbhjh', 'nlknnjklnknkl', '324242.00', NULL, 'fsfsfsf', 'gfdgfd', 'fsfsfsf', 0, 0, 0, '2021-04-12 06:40:23', '2021-04-12 06:40:23'),
-(23, 4, 1, 'dfsff', 'sfdgdgdg', '43434.00', NULL, 'fsfsfsf', 'gdgdgd', 'fsfsfsf', 0, 0, 0, '2021-04-12 06:41:05', '2021-04-12 06:41:05'),
-(24, 5, 1, 'adsdss', 'fsfsf', '122.00', NULL, 'fsfsf', 'fdfdfdfdf', 'fsfsfsfsf', 0, 0, 0, '2021-04-12 06:41:33', '2021-04-12 06:41:33'),
-(25, 5, 1, 'fsfsfsfsf', 'fgdgdgdgdgdg', '1232333.00', NULL, 'fsfsfsfsf', 'gdgdgdgdg', 'fsfsfsfsf', 0, 0, 0, '2021-04-12 06:41:54', '2021-04-12 06:41:54'),
-(26, 6, 1, 'fsfsfsf', 'gdgdgdg', '13343.00', NULL, 'sfsfsddf', 'sdgsdgsdgsdg', 'sdgdsgsgs', 0, 0, 0, '2021-04-12 06:42:17', '2021-04-12 06:42:17'),
-(27, 7, 1, 'fsfsfsfsf', 'adadsfdsfdd', '23321.00', NULL, 'dsaddfsdf', 'dssdgfgf', 'sdasddsfsdfs', 0, 0, 0, '2021-04-12 06:42:43', '2021-04-12 06:42:43'),
-(28, 8, 1, 'dsffsfsf', 'fgdfgdgdd', '23133.00', NULL, 'dadaddsf', 'sdffsdfsdfds', 'gsdgfddfg', 0, 0, 0, '2021-04-12 06:43:06', '2021-04-12 06:43:06'),
-(29, 9, 1, 'fdsfdsfsdfdsf', 'wdefsdfsdf', '3334.00', NULL, 'fsddfsfds', 'gfdffddsfds', 'fdsffsdfdsf', 0, 0, 0, '2021-04-12 06:43:25', '2021-04-12 06:43:25'),
-(30, 10, 1, 'dfsfdsf', 'fdgfdfgfgd', '44344.00', NULL, 'fsdfdsfds', 'fdsdfsdgffgdf', 'dfsgfsgrggr', 0, 0, 0, '2021-04-12 06:43:50', '2021-04-12 06:43:50'),
-(32, 12, 1, 'fsfsfs', 'fdsfdsfdsds', '344.00', NULL, 'dfsds', 'dfsfsg', 'sdasdaddsf', 0, 0, 0, '2021-04-12 07:23:39', '2021-04-12 07:23:39'),
-(33, 2, 2, 'fsfsf', 'fdsfsdfsdf', '34233.00', NULL, 'dsadsadsad', 'fsdfsdfsdf', 'dasdasdasd', 0, 0, 0, '2021-04-12 07:27:53', '2021-04-12 07:27:53'),
-(34, 3, 2, 'dasdsadsad', 'dsfsdfsfdsf', '233223.00', NULL, 'dsadasda', 'fdsfsdfds', 'sadsdadsads', 0, 0, 0, '2021-04-12 07:28:20', '2021-04-12 07:28:20'),
-(35, 4, 2, 'dsadsasda', 'fdsfsdfsdfds', '123323.00', NULL, 'dsadasdasd', 'fdsfsdfds', 'dsdsadasd', 0, 0, 0, '2021-04-12 07:28:40', '2021-04-12 07:28:40'),
-(36, 5, 2, 'dsfsfsdfd', 'dsfsdfdsfsfsf', '1232323.00', NULL, 'dsadsasddas', 'fdsfdsfsdf', 'asddsadsadd', 0, 0, 0, '2021-04-12 07:29:37', '2021-04-12 07:29:37'),
-(37, 6, 2, 'fadfssdfdsf', 'sadadasdasd', '122333.00', NULL, 'dadasds', 'sfdfdsfds', 'asdsdfsdfsf', 0, 0, 0, '2021-04-12 07:29:53', '2021-04-12 07:29:53'),
-(38, 7, 2, 'efsefsef', 'dawdsadesfsef', '32423423.00', NULL, 'wddsdfs', 'dassdads', 'fdsfsfsdf', 0, 1, 0, '2021-04-12 07:30:19', '2021-04-12 07:30:19'),
-(39, 8, 2, 'fdsfsdfdsf', 'dsdsasdadaads', '3242434.00', NULL, 'dsdfsdf', 'dasdsasd', 'fdsfsdfsfd', 0, 1, 0, '2021-04-12 07:30:36', '2021-04-12 07:30:36'),
-(40, 9, 2, 'fsefsdfsdf', 'dwadadsadsad', '3232424.00', NULL, 'fdsfsdfs', 'sdadasadd', 'dfsfsdfsf', 0, 1, 0, '2021-04-12 07:30:57', '2021-04-12 07:30:57'),
-(41, 7, 2, 'dasdsads', 'fdsfsdfdsf', '123242.00', NULL, 'dsadsads', 'fdsfdfsdf', 'dsadsadad', 0, 1, 0, '2021-04-12 07:31:50', '2021-04-12 07:31:50'),
-(42, 8, 2, 'fdsfdsfsdf', 'asddasdadads', '323233.00', NULL, 'dsadsadsa', 'fdsfdsfdsf', 'saddsadsasd', 0, 0, 0, '2021-04-12 07:32:08', '2021-04-12 07:32:08'),
-(43, 9, 2, 'fdsfdsfdsf', 'dasdsadadwa', '4234233.00', NULL, 'dfdsdf', 'dsfsadad', 'dfsfsfdsf', 0, 0, 0, '2021-04-12 07:32:27', '2021-04-12 07:32:27'),
-(44, 10, 2, 'fsefsdfds', 'dasdadadasd', '4242424.00', NULL, 'fdsfdsdf', 'sdfdsfsdf', 'dsadsdasdasd', 0, 0, 0, '2021-04-12 07:32:44', '2021-04-12 07:32:44'),
-(45, 12, 2, 'dfsdfsff', 'dsadadasda', '3333.00', NULL, 'dsfdsdf', 'sdsadsad', 'fdsfdsfs', 0, 0, 0, '2021-04-12 07:33:02', '2021-04-12 07:33:02'),
-(46, 1, 1, 'cdscs', 'sdvs', '900.00', NULL, 'Canada', 'British Columbia', 'Vancouver', 0, 1, 0, '2021-04-13 03:35:43', '2021-04-13 03:35:43');
+INSERT INTO `ad_listings` (`id`, `category_id`, `user_id`, `title`, `content`, `price`, `phone`, `country`, `state`, `city`, `active_on`, `featured_on`, `created_at`, `updated_at`) VALUES
+(4, 1, 1, 'My Cozy bedroom', 'Dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt. ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam. et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore', '78.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 1, '2021-03-31 02:20:52', '2021-04-13 05:37:30'),
+(5, 2, 2, 'iPhone X Fresh', 'gfdjgdfjgdlkf klfdgjkldf', '897.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 0, 0, '2021-03-31 02:24:06', '2021-03-31 02:24:06'),
+(6, 1, 2, 'High-performance Bi-Cycle', 'fdsgs', '234.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 0, 0, '2021-03-31 02:25:47', '2021-03-31 02:25:47'),
+(7, 4, 2, 'KTM 800CC Bike', 'tertert', '555.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-01 20:48:20', '2021-04-01 20:48:20'),
+(8, 5, 2, 'MacBook Pro - 8 GB / 256GB', 'fdsfsdf', '4444.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-01 20:52:49', '2021-04-01 20:52:49'),
+(9, 6, 2, 'Samsung Glalaxy S8', '3453453dgfg', '100.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-02 01:24:16', '2021-04-02 01:24:16'),
+(10, 7, 2, 'Fresh Digital Camera', 'fsdfdsf2121212fdsfsdfsdfsd', '4000.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-02 01:28:07', '2021-04-02 01:28:07'),
+(47, 8, 2, 'Spammed Ad', 'Try and catch me!', '45.00', '999999999', 'No COuntry', 'Fake State', 'Fake Street', 1, 0, '2021-04-18 18:57:13', '2021-04-18 18:57:13'),
+(48, 3, 2, 'I love to spam ', 'I can\'t believe I am not banned yet', '45.00', '1111', 'Kanada', 'Los angels', 'php city', 1, 0, '2021-04-18 18:59:12', '2021-04-18 18:59:12'),
+(49, 4, 1, 'My awesome dining room', 'This is where I treat my guests every occasion ;)', '450.00', NULL, 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-18 19:15:42', '2021-04-18 19:15:42'),
+(50, 2, 1, 'New garage storage space for rent', 'Hi, I am looking for renters who would be interested in looking for storage space. Only 550.00 a month!', '550.00', NULL, 'Canada', 'British Columbia', 'Vancouver', 0, 0, '2021-04-18 19:18:47', '2021-04-18 19:18:47');
 
 -- --------------------------------------------------------
 
@@ -138,8 +117,8 @@ INSERT INTO `ad_listings` (`id`, `category_id`, `user_id`, `title`, `content`, `
 
 CREATE TABLE `category` (
   `id` int(11) NOT NULL,
-  `name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL
+  `name` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -147,17 +126,14 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `name`, `description`) VALUES
-(1, 'Mobiles', 'Mobiles Phones and Accessories'),
-(2, 'Electronics', 'Electronics'),
-(3, 'Real Estate', 'Real Estate'),
-(4, 'Vehicles', 'Vehicles'),
-(5, 'Dining', 'Dining'),
-(6, 'Kitchen', 'Kitchen'),
-(7, 'Washroom', 'Washroom'),
-(8, 'Laundry Room', 'Laundry Room'),
-(9, 'Recreational Room', 'Recreational Room'),
-(10, 'Bedroom', 'Bedroom'),
-(12, 'Garage', 'Garage');
+(1, 'Bedroom', 'This category is for posting bedroom only'),
+(2, 'Garage', 'This category is for posting garage only'),
+(3, 'Laundry Room', 'This category is for posting Laundry room only'),
+(4, 'Dining Room', 'This category is for posting dining room only'),
+(5, 'Kitchen', 'This category is for posting kitchen only'),
+(6, 'Washroom', 'This category is for posting washroom only'),
+(7, 'Living Room', 'This category is for posting living room only'),
+(8, 'Recreational Room', 'This category is for posting recreational room only');
 
 -- --------------------------------------------------------
 
@@ -191,8 +167,8 @@ CREATE TABLE `interact` (
   `listing_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `rating` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `comments` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `comments` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -219,14 +195,14 @@ INSERT INTO `interact` (`id`, `listing_id`, `user_id`, `rating`, `comments`, `na
 
 CREATE TABLE `logs` (
   `id` int(11) NOT NULL,
-  `action` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `info` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `action` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `info` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(11) DEFAULT NULL,
-  `username` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `full_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL
+  `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `full_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -262,7 +238,7 @@ INSERT INTO `logs` (`id`, `action`, `info`, `date`, `user_id`, `username`, `emai
 CREATE TABLE `moderate_user` (
   `user_id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
-  `reason` text COLLATE utf8_unicode_ci NOT NULL
+  `reason` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -277,17 +253,6 @@ INSERT INTO `moderate_user` (`user_id`, `admin_id`, `reason`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `review_ad`
---
-
-CREATE TABLE `review_ad` (
-  `listing_id` int(11) NOT NULL,
-  `admin_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -297,10 +262,10 @@ CREATE TABLE `users` (
   `full_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `profile_image` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `code` mediumint(50) NOT NULL,
-  `status` text COLLATE utf8_unicode_ci NOT NULL,
+  `status` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `banned_on` int(1) NOT NULL DEFAULT '0',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -404,13 +369,6 @@ ALTER TABLE `moderate_user`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `review_ad`
---
-ALTER TABLE `review_ad`
-  ADD KEY `review_ad_ibfk_1` (`listing_id`),
-  ADD KEY `admin_id` (`admin_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -432,13 +390,13 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `ad_images`
 --
 ALTER TABLE `ad_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `ad_listings`
 --
 ALTER TABLE `ad_listings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -479,7 +437,7 @@ ALTER TABLE `ad_images`
 --
 ALTER TABLE `ad_listings`
   ADD CONSTRAINT `ad_listings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `ad_listings_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`);
+  ADD CONSTRAINT `ad_listings_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `favourite_ad`
@@ -501,13 +459,6 @@ ALTER TABLE `interact`
 ALTER TABLE `moderate_user`
   ADD CONSTRAINT `moderate_user_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `moderate_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `review_ad`
---
-ALTER TABLE `review_ad`
-  ADD CONSTRAINT `review_ad_ibfk_1` FOREIGN KEY (`listing_id`) REFERENCES `ad_listings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `review_ad_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

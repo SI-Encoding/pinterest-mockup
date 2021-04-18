@@ -295,10 +295,10 @@ if (isset($_POST['update_ad'])) {
 				$_SESSION['message'] = "You can not upload this file type!";
 			}
 			// image upload end
-		} else {
+		} /*else {
 			$_SESSION['message'] = "Error";
 			$_SESSION['msg_type'] = "success";
-		}
+		}*/
 	}
     else
     {
@@ -340,6 +340,7 @@ if (isset($_POST['postad']))
     $country = mysqli_real_escape_string($con, $_POST['country']);
     $state = mysqli_real_escape_string($con, $_POST['state']);
     $city = mysqli_real_escape_string($con, $_POST['city']);
+	$category_id = $_POST['category_id'];
 
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
@@ -350,7 +351,7 @@ if (isset($_POST['postad']))
         $fetch_info = mysqli_fetch_assoc($run_Sql);
         $user_id = $fetch_info['id'];
 
-        $category_id = "1";
+      
 		$insert_data = "INSERT INTO ad_listings (category_id, user_id, title, content, price, country, state, city)
                         values('$category_id', '$user_id', '$title', '$adpost', '$price', '$country', '$state', '$city')";
 		$data_check = mysqli_query($con, $insert_data);
