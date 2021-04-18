@@ -1,6 +1,9 @@
 <!doctype html>
 <html class="no-js" lang="en">
-
+<?php 
+$email = $_SESSION['email'];
+$password = $_SESSION['password'];
+?>
 <head>
     <meta charset="utf-8">
 
@@ -32,6 +35,7 @@
     <!--====== Style CSS ======-->
     <link rel="stylesheet" href="assets/css/style.css">
 
+    <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
 </head>
 
 <body class="gray-bg">
@@ -76,22 +80,54 @@
 
                     <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                         <ul class="navbar-nav m-auto">
+                            <?php if ($admin == "admin") { ?>                            
                             <li>
-                                <a class="active" href="index.php">Home <span class="line"></span></a>
+                                <a href="admin/dashboard.php">Dashboard <span class="line"></span></a>
+                            </li>
+                            <?php } else { ?>
+                            <li>
+                                <a href="index.php">Home <span class="line"></span></a>
                             </li>
                             <li>
-                                <a href="#">Categories <span class="line"></span></a>
+                                <a href="dashboard.php">Dashboard <span class="line"></span></a>
                             </li>
+                            <?php } ?>
+                            <?php
+                                $sql_noti = "SELECT * FROM `moderate_user` WHERE user_id = '$user_id'";
+                                $run_sql_noti = mysqli_query($con, $sql_noti);
+                                $fetch_noti = mysqli_fetch_assoc($run_sql_noti);
+                            ?>
+                            <?php if ($fetch_noti['reason'] != "") { ?>
                             <li>
-                                <a href="contact.php">Contact <span class="line"></span></a>
+                                <a data-toggle="modal" data-target="#idnoti">Notification <i style="color:red;" class="fas fa-bell"></i><span class="line"></span></a>
+                                <!-- <a href="#">Notification <span class="line"></span></a> -->
                             </li>
+                            <?php } else {}?>
+
                         </ul>
                     </div>
 
-                    <?php
-                    $email = $_SESSION['email'];
-                    $password = $_SESSION['password'];
-                    if($email != false && $password != false) { ?>
+                    <?php if ($admin == "admin") { ?>
+
+                    <div class="navbar_btn">
+                        <ul>
+                            <li>
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="fasse">My Account</a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <ul>
+                                            <li><a href="admin/dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                            <li><a href="admin/logout.php"><i class="fas fa-door-open"></i> Log Out</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a class="sign-up" href="admin/logout.php">Log Out</a></li>
+                        </ul>
+                    </div>
+
+                    <?php } elseif ($email != false && $password != false) { ?>
 
                     <div class="navbar_btn">
                         <ul>
@@ -103,6 +139,7 @@
                                         <ul>
                                             <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                                             <li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
+                                            <li><a href="favourite-ads.php"><i class="fas fa-heart"></i> My Favourites</a></li>
                                             <!-- <li><a href="my-ads.html"><i class="fas fa-layer-group"></i> My Ads</a></li>
                                             <li><a href="offermessages.html"><i class="fas fa-envelope"></i> Offers/Messages</a></li>
                                             <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
@@ -132,5 +169,28 @@
         </div>
 
     </header>
+
+            <!-- Modal -->
+            <div class="modal fade" id="idnoti" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">You Are Banned</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg">
+                        <div class="post_form">
+                            <div class="post_title">
+                                <h5 class="title"><?php echo $fetch_noti['reason']; ?></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
 
     <!--====== HEADER PART ENDS ======-->

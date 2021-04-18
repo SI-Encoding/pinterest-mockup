@@ -10,7 +10,6 @@ if ($email != false && $password != false)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
         $user_id = $fetch_info['id'];
-		$status = $fetch_info['role_id'];
 		$code = $fetch_info['code'];
         $profile_image = $fetch_info['profile_image'];
 		if ($status == 0)
@@ -53,6 +52,7 @@ else
 						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
+						<a class="nav-item nav-link" href="user_logs.php">User Logs</a>
 						<a class="nav-item nav-link active" href="category_list.php">Categories</a>
 						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
@@ -93,35 +93,7 @@ else
 						<div class="post_title">
 							<h5 class="title">Categories </h5> <br/><div class="text-right"><button data-toggle="modal" data-target="#addCat" type="button" class="btn main-btn btn-sm">Add a Category</button></div>
                         </div>
-						<!-- <div class="row">
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Total Ad Posted</a></h6>
-										<p>480 Add Posted</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Featured Ads</a></h6>
-										<p>80 Add Posted</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-envelope-open-text"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Offers / Messages</a></h6>
-										<p>2040 Add Posted</p>
-									</div>
-								</div>
-							</div>
-						</div> -->
+
 						<div class="ads_table table-responsive mt-30">
 							<table class="table">
 								<thead>
@@ -139,6 +111,9 @@ else
                                     $run_Sql = mysqli_query($con, $sql);
                                 ?>
                                 <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
+								<?php 
+
+								?>
                                     <tr>
 										<td class="id">
                                             <div class="table_title">

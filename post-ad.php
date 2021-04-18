@@ -9,7 +9,7 @@ if ($email != false && $password != false)
 	if ($run_Sql)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
-        $id = $fetch_info['id'];
+        $user_id = $fetch_info['id'];
 		$name = $fetch_info['username'];
 		$fullname = $fetch_info['full_name'];
 		$phone = $fetch_info['phone'];
@@ -69,6 +69,7 @@ else
 								<ul>
 									<li><a class="active" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 									<li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
+									<li><a href="favourite-ads.php"><i class="fas fa-heart"></i> My Favourites</a></li>
 									<!-- <li><a href="my-ads.html"><i class="fal fa-layer-group"></i> My Ads</a></li>
 									<li><a href="offermessages.html"><i class="fal fa-envelope"></i> Offers/Messages</a></li>
 									<li><a href="payments.html"><i class="fal fa-wallet"></i> Payments</a></li>
@@ -81,6 +82,11 @@ else
 					</div>
 				</div>
 				<div class="col-lg-5">
+				<?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-<?php echo $_SESSION['msg_type']; ?> text-center">
+                        <?php echo $_SESSION['message']; unset($_SESSION['message']); ?>
+                    </div>
+                <?php endif ?>
 
                 <?php if(count($success) == 1){ ?>
 
@@ -107,12 +113,20 @@ else
 								<input type="text" name="title" placeholder="Title" required>
 							</div>
 							<div class="single_form">
-								<select>
-									<option value="none">Select Categories</option>
-									<option value="none">Mobiles</option>
-									<option value="none">Electronics</option>
-									<option value="none">Real Estate</option>
-									<option value="none">Vehicles</option>
+								<select name="category_id">
+								<?php 
+                                    $sql = "SELECT * FROM `category`";
+                                    $run_Sql = mysqli_query($con, $sql);
+                                ?>
+								 	<option value="none">Select Categories</option>
+									 <option value="1">Bedroom</option>
+									<option value="2">Garage</option>
+									<option value="3">Laundry Room</option>
+									<option value="4">Dining Room</option>
+									<option value="5">Kitchen</option> 
+									<option value="6">Washroom</option> 
+									<option value="7">Living Room</option> 
+									<option value="8">Recreational Room</option> 
 								</select>
 							</div>
 							<div class="single_form">

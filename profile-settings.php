@@ -9,6 +9,7 @@ if ($email != false && $password != false)
 	if ($run_Sql)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
+		$user_id = $fetch_info['id'];
 		$name = $fetch_info['username'];
 		$fullname = $fetch_info['full_name'];
 		$phone = $fetch_info['phone'];
@@ -67,6 +68,7 @@ else
 								<ul>
 									<li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 									<li><a class="active" href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
+									<li><a href="favourite-ads.php"><i class="fas fa-heart"></i> My Favourites</a></li>
 									<!-- <li><a href="my-ads.html"><i class="fal fa-layer-group"></i> My Ads</a></li>
 									<li><a href="offermessages.html"><i class="fal fa-envelope"></i> Offers/Messages</a></li>
 									<li><a href="payments.html"><i class="fal fa-wallet"></i> Payments</a></li>

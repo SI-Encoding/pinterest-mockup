@@ -6,12 +6,15 @@ $name = "";
 $errors = array();
 $success  = array();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 // User Comment Form
 if (isset($_POST['user_comment'])) {
+	$user_id = $_POST['user_id'];
+	$listing_id = $_POST['listing_id'];
+	$radio = $_POST['radio'];
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$comment = $_POST['comment'];
@@ -21,11 +24,8 @@ if (isset($_POST['user_comment'])) {
     $password = $_SESSION['password'];
 	if ($email != false && $password != false)
 	{
-		$listing_id = 4;
-		$user_id = 11;
-		$rating = 4;
 
-        $sql = "INSERT INTO `interact`(`listing_id`, `user_id`, `rating`, `comments`, `name`) VALUES ('$listing_id','$user_id','$rating','$comment','$name')";
+        $sql = "INSERT INTO `interact`(`listing_id`, `user_id`, `rating`, `comments`, `name`) VALUES ('$listing_id','$user_id','$radio','$comment','$name')";
         $run_sql = mysqli_query($con, $sql);
 
         $_SESSION['message'] = "Comment has been posted!";
@@ -92,6 +92,7 @@ if (isset($_POST['update_ad'])) {
     $country = mysqli_real_escape_string($con, $_POST['country']);
     $state = mysqli_real_escape_string($con, $_POST['state']);
     $city = mysqli_real_escape_string($con, $_POST['city']);
+	$category_id = $_POST['category_id'];
 
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
@@ -101,8 +102,6 @@ if (isset($_POST['update_ad'])) {
         // $run_Sql = mysqli_query($con, $sql);
         // $fetch_info = mysqli_fetch_assoc($run_Sql);
         // $user_id = $fetch_info['id'];
-
-        $category_id = "1";
 
 		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city', updated_at = CURRENT_TIMESTAMP
 						WHERE `id` = '$postid'";
@@ -186,63 +185,75 @@ if (isset($_POST['postad']))
     $country = mysqli_real_escape_string($con, $_POST['country']);
     $state = mysqli_real_escape_string($con, $_POST['state']);
     $city = mysqli_real_escape_string($con, $_POST['city']);
+	$category_id = $_POST['category_id'];
 
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
     if ($email != false && $password != false)
 	{   
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $run_Sql = mysqli_query($con, $sql);
-        $fetch_info = mysqli_fetch_assoc($run_Sql);
-        $user_id = $fetch_info['id'];
 
-        $category_id = "1";
-		$insert_data = "INSERT INTO ad_listings (category_id, user_id, title, content, price, country, state, city)
-                        values('$category_id', '$user_id', '$title', '$adpost', '$price', '$country', '$state', '$city')";
-		$data_check = mysqli_query($con, $insert_data);
-        
-        $success['db-error'] = "Ad Successfully Posted!";
+		$sql_ban = "SELECT * FROM users WHERE email = '$email'";
+		$run_Sql_ban = mysqli_query($con, $sql_ban);
+		$fetch_info_ban = mysqli_fetch_assoc($run_Sql_ban);
+		if ($fetch_info_ban['banned_on'] == 0) {
+		
+			$sql = "SELECT * FROM users WHERE email = '$email'";
+			$run_Sql = mysqli_query($con, $sql);
+			$fetch_info = mysqli_fetch_assoc($run_Sql);
+			$user_id = $fetch_info['id'];
 
-        if ($_FILES['file']['tmp_name'] !='') {
+			
+			$insert_data = "INSERT INTO ad_listings (category_id, user_id, title, content, price, country, state, city, active_on)
+							values('$category_id', '$user_id', '$title', '$adpost', '$price', '$country', '$state', '$city', '0')";
+			$data_check = mysqli_query($con, $insert_data);
+			
+			$success['db-error'] = "Ad Successfully Posted!";
 
-            $message['works'] = "It worked!";
-            // image upload
-            $fileExt = explode('.', $fileName);
-            $fileActualExt = strtolower(end($fileExt));
-            $allowed = array('jpg', 'jpeg', 'png');
-            if (in_array($fileActualExt, $allowed)) {
-                if ($fileError === 0) {
-                    if ($fileSize < 1000000) {
-                        $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-                        $run_Sql = mysqli_query($con, $sql);
-                        $fetch_info = mysqli_fetch_assoc($run_Sql);
-                        $listing_id = $fetch_info['id'];
+			if ($_FILES['file']['tmp_name'] !='') {
 
-                        $fileNameNew = uniqid('', true).".".$fileActualExt;
-                        $fileDestination = 'uploads/'.$fileNameNew;
-                        move_uploaded_file($fileTmpName, $fileDestination);
+				$message['works'] = "It worked!";
+				// image upload
+				$fileExt = explode('.', $fileName);
+				$fileActualExt = strtolower(end($fileExt));
+				$allowed = array('jpg', 'jpeg', 'png');
+				if (in_array($fileActualExt, $allowed)) {
+					if ($fileError === 0) {
+						if ($fileSize < 1000000) {
+							$sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
+							$run_Sql = mysqli_query($con, $sql);
+							$fetch_info = mysqli_fetch_assoc($run_Sql);
+							$listing_id = $fetch_info['id'];
 
-                        $insert_data = "INSERT INTO ad_images (listing_id, image)
-                                        values('$listing_id', '$fileNameNew')";
-                        $data_check = mysqli_query($con, $insert_data);
+							$fileNameNew = uniqid('', true).".".$fileActualExt;
+							$fileDestination = 'uploads/'.$fileNameNew;
+							move_uploaded_file($fileTmpName, $fileDestination);
 
-                        $success['db-error'] = "Ad Successfully Posted!";
-        
-                    } else {
-                        echo "File is too big!";
-                    }
-                } else {
-                    echo "There was an error uploading!";
-                }
-            } else {
-                echo "You can not upload this file type!";
-            }
-            // image upload end
-        }
+							$insert_data = "INSERT INTO ad_images (listing_id, image)
+											values('$listing_id', '$fileNameNew')";
+							$data_check = mysqli_query($con, $insert_data);
+
+							$success['db-error'] = "Ad Successfully Posted!";
+			
+						} else {
+							echo "File is too big!";
+						}
+					} else {
+						echo "There was an error uploading!";
+					}
+				} else {
+					echo "You can not upload this file type!";
+				}
+				// image upload end
+			}
+		} elseif ($fetch_info_ban['banned_on'] == 1) {
+			$_SESSION['message'] = "You are banned and can not post an ad";
+			$_SESSION['msg_type'] = "danger";
+		}
 	}
     else
     {
-        echo "Error";
+		$_SESSION['message'] = "Error, please try again!";
+        $_SESSION['msg_type'] = "danger";
     }
 }
 
@@ -276,7 +287,7 @@ if (isset($_POST['signup']))
 			$subject = "Email Verification Code";
 			$message = "Your verification code is $code";
 			$sender = "From: admin@test.com";
-			if (mail($email, $subject, $message, $sender))
+			if (1==1)
 			{
 				$info = "We've sent a verification code to your email - $email but for convenience here is the code $code";
 				$_SESSION['info'] = $info;
@@ -387,9 +398,9 @@ if (isset($_POST['check-email']))
 			$subject = "Password Reset Code";
 			$message = "Your password reset code is $code";
 			$sender = "From: jasur88@gmail.com";
-			if (mail($email, $subject, $message, $sender))
+			if (1==1)
 			{
-				$info = "We've sent a passwrod reset otp to your email - $email";
+				$info = "We've sent a passwrod reset otp to your email - $email  but for convenience here is the code $code";
 				$_SESSION['info'] = $info;
 				$_SESSION['email'] = $email;
 				header('location: verify-code.php');
@@ -425,7 +436,7 @@ if (isset($_POST['check-reset-otp']))
 		$_SESSION['email'] = $email;
 		$info = "Please create a new password that you don't use on any other site.";
 		$_SESSION['info'] = $info;
-		header('location: newpassword.php');
+		header('location: new-password.php');
 		exit();
 	}
 	else

@@ -22,7 +22,8 @@
 						<a class="nav-item nav-link active" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
-						<a class="nav-item nav-link" href="category_list.php">Categories</a>
+						<a class="nav-item nav-link" href="user_logs.php">User Logs</a>
+						<!--<a class="nav-item nav-link" href="category_list.php">Categories</a>-->
 						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
@@ -61,56 +62,7 @@
 					<div class="dashboard_content mt-20">
 						<div class="post_title">
 							<h5 class="title">Pending Approval</h5> </div>
-						<!-- <div class="row">
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Total Created Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE 1";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file-alt"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Featured Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE `featured_on` = 1";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="single_dashboard_box d-flex">
-									<div class="box_icon"> <i class="fas fa-file"></i> </div>
-									<div class="box_content media-body">
-										<h6 class="title"><a href="#">Inactive Ads</a></h6>
-										<?php
-											$user_sql = "SELECT COUNT(*) AS count FROM `ad_listings` WHERE `active_on` = 0";
-											$user_run_Sql = mysqli_query($con, $user_sql);
-											while($row = mysqli_fetch_assoc($user_run_Sql)) {
-												$output = $row['count'];
-											}
-										?>
-										<p><?php echo $output; ?> Ads</p>
-									</div>
-								</div>
-							</div>
-						</div> -->
+
 						<div class="ads_table table-responsive mt-30">
 							<table class="table">
 								<thead>

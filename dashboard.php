@@ -64,8 +64,8 @@ else
 								<ul>
 									<li><a class="active" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
 									<li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
-									<!-- <li><a href="my-ads.html"><i class="fal fa-layer-group"></i> My Ads</a></li>
-									<li><a href="offermessages.html"><i class="fal fa-envelope"></i> Offers/Messages</a></li>
+									<li><a href="favourite-ads.php"><i class="fas fa-heart"></i> My Favourites</a></li>
+									<!-- <li><a href="offermessages.html"><i class="fal fa-envelope"></i> Offers/Messages</a></li>
 									<li><a href="payments.html"><i class="fal fa-wallet"></i> Payments</a></li>
 									<li><a href="favourite-ads.html"><i class="fal fa-heart"></i> My Favourites</a></li>
 									<li><a href="privacy-setting.html"><i class="fal fa-star"></i> Privacy Settings</a></li> -->
@@ -241,12 +241,16 @@ else
                 <input type="text" name="title" placeholder="Title" value="<?php echo $row['title']; ?>" required>
             </div>
             <div class="single_form">
-                <select>
-                    <option value="none">Select Categories</option>
-                    <option value="none">Mobiles</option>
-                    <option value="none">Electronics</option>
-                    <option value="none">Real Estate</option>
-                    <option value="none">Vehicles</option>
+
+				<?php 
+				$sql_category2 = "SELECT * FROM category";
+				$run_sql_category2 = mysqli_query($con, $sql_category2);
+				?>
+
+                <select name="category_id">
+				<?php while ($fetch_info2 = mysqli_fetch_assoc($run_sql_category2)): ?>
+                    <option value="<?php echo $fetch_info2['id']; ?>"><?php echo $fetch_info2['name']; ?></option>
+				<?php endwhile; ?>
                 </select>
             </div>
             <div class="single_form">
@@ -311,160 +315,6 @@ else
 
                                 <?php endwhile; ?>
 
-                                    <!-- Button trigger modal -->
-                                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                                    Launch demo modal
-                                    </button> -->
-
-									<!-- <tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox4">
-												<label for="checkbox4"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-3.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="sold">Sold</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr> -->
-
-									<!-- <tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox6">
-												<label for="checkbox6"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-5.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="inactive">Inactive</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr> -->
-									<!-- <tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox7">
-												<label for="checkbox7"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-6.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="expired">Expired</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="checkbox">
-											<div class="table_checkbox">
-												<input type="checkbox" id="checkbox7">
-												<label for="checkbox7"></label>
-											</div>
-										</td>
-										<td class="photo">
-											<div class="table_photo"> <img src="assets/images/ads-7.png" alt="ads"> </div>
-										</td>
-										<td class="title">
-											<div class="table_title">
-												<h6 class="titles">8 GB DDR4 Ram, 4th Gen</h6>
-												<p>Ad ID: ng3D5hAMHPajQrM</p>
-											</div>
-										</td>
-										<td class="category">
-											<div class="table_category">
-												<p>Ram & Laptop</p>
-											</div>
-										</td>
-										<td class="status">
-											<div class="table_status"> <span class="deleted">Deleted</span> </div>
-										</td>
-										<td class="price">
-											<div class="table_price"> <span>$299.00</span> </div>
-										</td>
-										<td class="action">
-											<div class="table_action">
-												<ul>
-													<li><a href="#"><i class="fas fa-eye"></i></a></li>
-													<li><a href="#"><i class="fas fa-pencil-alt"></i></a></li>
-													<li><a href="#"><i class="fas fa-trash-alt"></i></a></li>
-												</ul>
-											</div>
-										</td>
-									</tr> -->
 								</tbody>
 							</table>
 						</div>

@@ -6,9 +6,9 @@ $name = "";
 $errors = array();
 $success  = array();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 // Delete Category Button
 if (isset($_GET['delete_category'])) {
@@ -116,8 +116,11 @@ if (isset($_GET['approve'])) {
 }
 
 //Ban User Button
-if (isset($_GET['ban_user'])) {
-    $id = $_GET['ban_user'];
+if (isset($_POST['ban_user'])) {
+
+    $id = $_POST['id'];
+	$reason = $_POST['reason'];
+	$admin_id = $_POST['admin_id'];
 
     $email = $_SESSION['email'];
     $password = $_SESSION['password'];
@@ -125,6 +128,10 @@ if (isset($_GET['ban_user'])) {
 	{
         $sql = "UPDATE `users` SET `banned_on` = 1 WHERE `id` = $id";
         $run_sql = mysqli_query($con, $sql);
+
+		$sql_reason = "INSERT INTO `moderate_user` (user_id, admin_id, reason)
+						values('$id', '$admin_id', '$reason')";
+		$run_sql_reason = mysqli_query($con, $sql_reason);
 
         $_SESSION['message'] = "User has been Banned and Deactivated!";
         $_SESSION['msg_type'] = "success";
@@ -145,6 +152,9 @@ if (isset($_GET['unban_user'])) {
     if ($email != false && $password != false)
 	{
         $sql = "UPDATE `users` SET `banned_on` = 0 WHERE `id` = $id";
+        $run_sql = mysqli_query($con, $sql);
+
+		$sql = "DELETE FROM `moderate_user` WHERE `user_id` = $id";
         $run_sql = mysqli_query($con, $sql);
 
         $_SESSION['message'] = "User has been Unbanned and Activated!";
@@ -224,6 +234,7 @@ if (isset($_POST['edit'])) {
 if (isset($_POST['update_ad'])) {
 
     $id = $_POST['id'];
+	$featured_on = $_POST['featured_on'];
     $title = mysqli_real_escape_string($con, $_POST['title']);
 	$price = mysqli_real_escape_string($con, $_POST['price']);
     $adpost = mysqli_real_escape_string($con, $_POST['adpost']);
@@ -232,6 +243,7 @@ if (isset($_POST['update_ad'])) {
     $country = mysqli_real_escape_string($con, $_POST['country']);
     $state = mysqli_real_escape_string($con, $_POST['state']);
     $city = mysqli_real_escape_string($con, $_POST['city']);
+	$category_id = $_POST['category_id'];
 
     $file = $_FILES[$id];
     $fileName = $_FILES[$id]['name'];
@@ -244,9 +256,9 @@ if (isset($_POST['update_ad'])) {
     $password = $_SESSION['password'];
     if ($email != false && $password != false)
 	{   
-        $category_id = "1";
+        //$category_id = "1";
 
-		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city' WHERE id = '$id'";
+		$insert_data = "UPDATE `ad_listings` SET `category_id`= '$category_id',`title`= '$title',`content`= '$adpost',`price`= '$price',`country`= '$country',`state`= '$state',`city`= '$city',`featured_on`= '$featured_on' WHERE id = '$id'";
 		$data_check = mysqli_query($con, $insert_data);
     
         $_SESSION['message'] = "Listing has been updated!";
@@ -260,10 +272,6 @@ if (isset($_POST['update_ad'])) {
 			if (in_array($fileActualExt, $allowed)) {
 				if ($fileError === 0) {
 					if ($fileSize < 1000000) {
-						// $sql = "SELECT id FROM ad_listings WHERE title = '$title' AND content = '$adpost' AND price = '$price'";
-						// $run_Sql = mysqli_query($con, $sql);
-						// $fetch_info = mysqli_fetch_assoc($run_Sql);
-						// $listing_id = $fetch_info['id'];
 
 						$fileNameNew = uniqid('', true).".".$fileActualExt;
 						$fileDestination = 'uploads/'.$fileNameNew;
@@ -284,8 +292,7 @@ if (isset($_POST['update_ad'])) {
 					$_SESSION['message'] = "There was an error uploading!";
 				}
 			} else {
-				//$_SESSION['message'] = "You can not upload this file type!";
-				$_SESSION['message'] = "You can not";
+				$_SESSION['message'] = "You can not upload this file type!";
 			}
 			// image upload end
 		} else {
@@ -490,6 +497,7 @@ if (isset($_POST['login']))
 	{
 		$fetch = mysqli_fetch_assoc($res);
 		$fetch_pass = $fetch['password'];
+		$admin = $fetch['username'];
 		if (password_verify($password, $fetch_pass))
 		{
 			$_SESSION['email'] = $email;
@@ -498,6 +506,7 @@ if (isset($_POST['login']))
 			{
 				$_SESSION['email'] = $email;
 				$_SESSION['password'] = $password;
+				$_SESSION['username'] = $admin;
 				header('location: dashboard.php');
 			}
 			else

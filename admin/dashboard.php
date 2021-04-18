@@ -1,3 +1,6 @@
+
+
+
 <?php include "header.php"; ?>
 
 	<section>
@@ -22,7 +25,8 @@
 						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link active" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
-						<a class="nav-item nav-link" href="category_list.php">Categories</a>
+						<a class="nav-item nav-link" href="user_logs.php">User Logs</a>
+					<!--	<a class="nav-item nav-link" href="category_list.php">Categories</a> -->
 						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
@@ -60,7 +64,7 @@
 
 					<div class="dashboard_content mt-20">
 						<div class="post_title">
-							<h5 class="title">Dashboard</h5> </div>
+							<h5 class="title">Ad Listings</h5> </div>
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="single_dashboard_box d-flex">
@@ -131,7 +135,7 @@
                                     $sql = "SELECT * FROM ad_listings";
                                     $run_Sql = mysqli_query($con, $sql);
                                 ?>
-                                <?php while ($row = mysqli_fetch_assoc($run_Sql)){ ?>
+                                <?php while ($row = mysqli_fetch_assoc($run_Sql)): ?>
                                     <?php
                                         $category_id = $row['category_id'];
                                         $sql_category = "SELECT * FROM category WHERE id ='$category_id'";
@@ -177,16 +181,18 @@
 											<div class="table_action">
 												<ul>
 													<li><a href="../adpost.php?view=<?php echo $row['id']; ?>" target="_blank"><i class="fas fa-eye"></i></a></li>
-                                                    <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
+                                                   <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
 													<li><a href="dashboard.php?ban=<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li>
 													<li><a href="dashboard.php?delete=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
 												</ul>
 											</div>
-										</td>
+			
+									</td>
 									</tr>
 
+
                                     <!-- Modal -->
-                                    <div class="modal fade" id="id<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                               <div class="modal fade" id="id<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                         <div class="modal-header">
@@ -204,17 +210,29 @@
 
         <form action="dashboard.php" method="POST" enctype="multipart/form-data">
 
+			<div class="single_form">
+
+			<select name="featured_on">
+				<option value="0">featured off</option>
+				<option value="1">featured on: make the ad featured</option>
+			</select>
+			</div>
+
             <div class="single_form">
                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>" required>
                 <input type="text" name="title" placeholder="Title" value="<?php echo $row['title']; ?>" required>
             </div>
             <div class="single_form">
-                <select>
-                    <option value="none">Select Categories</option>
-                    <option value="none">Mobiles</option>
-                    <option value="none">Electronics</option>
-                    <option value="none">Real Estate</option>
-                    <option value="none">Vehicles</option>
+
+				<?php 
+				$sql_category2 = "SELECT * FROM category";
+				$run_sql_category2 = mysqli_query($con, $sql_category2);
+				?>
+
+                <select name="category_id">
+				<?php while ($fetch_info2 = mysqli_fetch_assoc($run_sql_category2)): ?>
+                    <option value="<?php echo $fetch_info2['id']; ?>"><?php echo $fetch_info2['name']; ?></option>
+				<?php endwhile; ?> 
                 </select>
             </div>
             <div class="single_form">
@@ -257,7 +275,7 @@
                     <option value="Vancouver">Vancouver</option>
                     <option value="Edmonton">Edmonton</option>
                 </select>
-            </div>
+            </div> 
             <div class="single_form">
                 <button class="main-btn" type="submit" name="update_ad" value="Post Ad">Update</button>
             </div>
@@ -270,7 +288,7 @@
                                     </div>
                                     </div>
 
-                                <?php } ?>
+                                <?php endwhile; ?>
 
 
 								</tbody>

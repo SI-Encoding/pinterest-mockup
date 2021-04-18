@@ -4,7 +4,7 @@ $email = $_SESSION['email'];
 $password = $_SESSION['password'];
 if ($email != false && $password != false)
 {
-	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$sql = "SELECT * FROM admins WHERE email = '$email'";
 	$run_Sql = mysqli_query($con, $sql);
 	// if ($run_Sql)
 	// {
@@ -110,15 +110,12 @@ else
 
                     <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                         <ul class="navbar-nav m-auto">
-                            <li>
-                                <a class="active" href="index.php">Home <span class="line"></span></a>
-                            </li>
-                            <li>
-                                <a href="#">Categories <span class="line"></span></a>
-                            </li>
-                            <li>
+                            <!-- <li>
+                                <a class="active" href="dashboard.php">Dashboard <span class="line"></span></a>
+                            </li> -->
+                            <!-- <li>
                                 <a href="#">Contact <span class="line"></span></a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
@@ -134,18 +131,13 @@ else
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <ul>
                                             <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                            <li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li>
-                                            <!-- <li><a href="my-ads.html"><i class="fas fa-layer-group"></i> My Ads</a></li>
-                                            <li><a href="offermessages.html"><i class="fas fa-envelope"></i> Offers/Messages</a></li>
-                                            <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
-                                            <li><a href="favourite-ads.html"><i class="fas fa-heart"></i> My Favourites</a></li>
-                                            <li><a href="privacy-setting.html"><i class="fas fa-star"></i> Privacy Settings</a></li> -->
+                                            <!-- <li><a href="profile-settings.php"><i class="fas fa-cog"></i> Profile Settings</a></li> -->
                                             <li><a href="logout.php"><i class="fas fa-door-open"></i> Log Out</a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </li>
-                            <li><a class="sign-up" href="post-ad.php">Post Ads</a></li>
+                            <li><a class="sign-up" href="logout.php">logout</a></li>
                         </ul>
                     </div>
 

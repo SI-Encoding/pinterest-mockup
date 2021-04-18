@@ -4,21 +4,16 @@ $email = $_SESSION['email'];
 $password = $_SESSION['password'];
 if ($email != false && $password != false)
 {
-	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$sql = "SELECT * FROM admins WHERE email = '$email'";
 	$run_Sql = mysqli_query($con, $sql);
 	if ($run_Sql)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
         $user_id = $fetch_info['id'];
 		$status = $fetch_info['role_id'];
-		$code = $fetch_info['code'];
-        $profile_image = $fetch_info['profile_image'];
 		if ($status == 0)
 		{
-			if ($code != 0)
-			{
-				header('Location: password-reset.php');
-			}
+
 		}
 		else
 		{
@@ -53,7 +48,8 @@ else
 						<a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link active" href="user_list.php">Users</a>
-						<a class="nav-item nav-link" href="category_list.php">Categories</a>
+						<a class="nav-item nav-link" href="user_logs.php">User Logs</a>
+					<!--	<a class="nav-item nav-link" href="category_list.php">Categories</a> -->
 						<a class="nav-item nav-link" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
@@ -91,7 +87,7 @@ else
 
 					<div class="dashboard_content mt-20">
 						<div class="post_title">
-							<h5 class="title">Dashboard</h5> </div>
+							<h5 class="title">Users</h5> </div>
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="single_dashboard_box d-flex">
@@ -219,9 +215,10 @@ else
 											<div class="table_action">
                                             <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
-                                                    <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
+                                                    <!-- <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li> -->
 													<?php if ($row['banned_on'] == 0) { ?>
-													<li><a href="user_list.php?ban_user=<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li>
+													<li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li>
+													<!-- <li><a href="user_list.php?ban_user=<?php echo $row['id']; ?>"><i class="fas fa-ban"></i></a></li> -->
 													<?php } else { ?>
 													<li><a href="user_list.php?unban_user=<?php echo $row['id']; ?>"><i class="fas fa-check-circle"></i></a></li>
 													<?php } ?>
@@ -237,86 +234,31 @@ else
                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit</h5>
+                                            <h5 class="modal-title" id="exampleModalCenterTitle">Ban User</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-<div class="col-lg">
-    <div class="post_form">
-        <div class="post_title">
-            <h5 class="title">Ad Detail</h5>
-        </div>
-        <form action="dashboard.php" method="POST" autocomplete="" enctype="multipart/form-data">
-            <div class="single_form">
-                <input type="hidden" name="id" value="<?php echo $row['id']; ?>" required>
-                <input type="text" name="title" placeholder="Title" value="<?php echo $row['title']; ?>" required>
-            </div>
-            <div class="single_form">
-                <select>
-                    <option value="none">Select Categories</option>
-                    <option value="none">Mobiles</option>
-                    <option value="none">Electronics</option>
-                    <option value="none">Real Estate</option>
-                    <option value="none">Vehicles</option>
-                </select>
-            </div>
-            <div class="single_form">
-                <input type="number" name="price" placeholder="Ad Your Price" value="<?php echo $row['price']; ?>" required>
-            </div>
-            <div class="single_form">
-                <textarea name="adpost" placeholder="Ad Post" required><?php echo $row['content']; ?></textarea>
-            </div>
-            <div class="post_upload_file">
-                <label for="upload">
-                <span>Select image to upload</span>
-                <span></span>
-                <span class="main-btn">Select Files</span>
-                <span>Maximum upload file size: 500 KB</span>
-                <input type="file" name="file" id="upload">
-                </label>
-            </div>
-        <!-- </form> -->
-    </div>
-</div>
-<div class="col-lg">
-    <div class="sidebar_post_form">
-        <div class="post_title">
-            <h5 class="title">Contact Detail</h5>
-        </div>
-        <!-- <form action="#"> -->
-            <div class="single_form">
-                <input type="text" name="phone" placeholder="Phone" value="<?php echo $row['phone']; ?>">
-            </div>
-            <div class="single_form">
-                <input type="email" name="email" placeholder="Email Address" required value="<?php echo $email ?>">
-            </div>
-            <div class="single_form">
-                <select name="country" required>
-                    <option value="Canada">Canada</option>
-                    <option value="United States">United States</option>
-                </select>
-            </div>
-            <div class="single_form">
-                <select name="state" required>
-                    <option value="British Columbia">British Columbia</option>
-                    <option value="Alberta">Alberta</option>
-                </select>
-            </div>
-            <div class="single_form">
-                <select name="city" required>
-                    <option value="Vancouver">Vancouver</option>
-                    <option value="Edmonton">Edmonton</option>
-                </select>
-            </div>
-            <div class="single_form">
-                <button class="main-btn" type="submit" name="update_ad" value="Post Ad">Update</button>
-            </div>
-        </form>
-    </div>
-</div>
+											<div class="col-lg">
+												<div class="post_form">
 
+													<form action="user_list.php" method="POST" enctype="multipart/form-data">
+														<div class="single_form">
+															<input type="hidden" name="id" value="<?php echo $row['id']; ?>" required>
+															<input type="hidden" name="admin_id" placeholder="Reason" value="<?php echo $user_id; ?>" required>
+														</div>
+
+														<div class="single_form">
+															<textarea name="reason" placeholder="Reason" required></textarea>
+														</div>
+
+														<div class="single_form">
+															<button class="main-btn" type="submit" name="ban_user" value="Ban">Ban User</button>
+														</div>
+													</form>
+												</div>
+											</div>
                                         </div>
                                         </div>
                                     </div>

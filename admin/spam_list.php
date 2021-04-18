@@ -4,21 +4,17 @@ $email = $_SESSION['email'];
 $password = $_SESSION['password'];
 if ($email != false && $password != false)
 {
-	$sql = "SELECT * FROM users WHERE email = '$email'";
+	$sql = "SELECT * FROM admins WHERE email = '$email'";
 	$run_Sql = mysqli_query($con, $sql);
 	if ($run_Sql)
 	{
 		$fetch_info = mysqli_fetch_assoc($run_Sql);
         $user_id = $fetch_info['id'];
 		$status = $fetch_info['role_id'];
-		$code = $fetch_info['code'];
-        $profile_image = $fetch_info['profile_image'];
+
 		if ($status == 0)
 		{
-			if ($code != 0)
-			{
-				header('Location: password-reset.php');
-			}
+
 		}
 		else
 		{
@@ -53,7 +49,8 @@ else
                         <a class="nav-item nav-link" href="pending_ads.php">Pending Ads</a>
 						<a class="nav-item nav-link" href="dashboard.php">Ad Listings</a>
 						<a class="nav-item nav-link" href="user_list.php">Users</a>
-						<a class="nav-item nav-link" href="category_list.php">Categories</a>
+                        <a class="nav-item nav-link" href="user_logs.php">User Logs</a>
+					<!--	<a class="nav-item nav-link" href="category_list.php">Categories</a> -->
 						<a class="nav-item nav-link active" href="spam_list.php">Spammed Users</a>
 					</nav><br/>
 					<!-- <div class="sidebar_profile mt-50">
@@ -91,14 +88,13 @@ else
 
 					<div class="dashboard_content mt-20">
 						<div class="post_title">
-							<h5 class="title">Dashboard</h5> </div>
+							<h5 class="title">Spammed Users</h5> </div>
 
 						<div class="ads_table table-responsive mt-30">
 							<table class="table">
 								<thead>
 									<tr>
 										<th class="id">User id</th>
-
                                         <th class="action">action</th>
 									</tr>
 								</thead>
