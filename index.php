@@ -1,5 +1,4 @@
 <?php require_once "controller.php"; ?>
-<?php include "header.php"?>
 
 <?php
 $sql = "SELECT * FROM `ad_listings`";
@@ -7,6 +6,7 @@ $run_Sql = mysqli_query($con, $sql);
 
 $email = $_SESSION['email'];
 $password = $_SESSION['password'];
+
 if ($email != false && $password != false)
 {
 	$sql_user = "SELECT * FROM users WHERE email = '$email'";
@@ -14,8 +14,35 @@ if ($email != false && $password != false)
     $fetch_info_user = mysqli_fetch_assoc($run_Sql_user);
 
     $user_id = $fetch_info_user['id'];
+
+    $sql2 = "SELECT * FROM users WHERE email = '$email'";
+	$run_Sql2 = mysqli_query($con, $sql2);
+	if ($run_Sql2)
+	{
+		$fetch_info = mysqli_fetch_assoc($run_Sql2);
+        $user_id = $fetch_info['id'];
+		$name = $fetch_info['username'];
+		$fullname = $fetch_info['full_name'];
+		$phone = $fetch_info['phone'];
+		$status = $fetch_info['status'];
+		$code = $fetch_info['code'];
+		if ($status == "verified")
+		{
+			if ($code != 0)
+			{
+				header('Location: verify-code.php');
+			}
+		}
+		else
+		{
+			header('Location: user-otp.php');
+		}
+	}
 }
+
 ?>
+
+<?php include "header.php"?>
 <?php //while ($row = mysqli_fetch_assoc($run_Sql)): ?>
 
     <!--====== ADS PART START ======-->
@@ -96,48 +123,48 @@ if ($email != false && $password != false)
                                 });
 
                             </script>
-                            <? if ($row['active_on'] == 1) { ?>
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="single_ads_card mt-30">
-                                    <div class="ads_card_image">
-                                        <a href="adpost.php?view=<?php echo $row['id']; ?>">
-                                            <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads">
-                                        </a>
-                                        <?php if ($row['featured_on'] == 1) { ?>
-                                        <p class="sticker">Featured</p>
-                                        <?php } ?>
-                                    </div>
-                                    <div class="ads_card_content">
-                                        <div class="meta d-flex justify-content-between">
-                                            <p><?php echo $fetch_info['name']; ?></p>
-
-                                            <?php if($fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
-                                            
-                                            <div id="like<?php echo $row['id']; ?>">
-                                            <unlike<?php echo $row['id']; ?>>
-                                                <a style="color:red;" class="like"><i class="fas fa-heart"></i></a>
-                                            </unlike<?php echo $row['id']; ?>>
-                                            </div>
-
-                                            <?php } else { ?>
-
-                                            <div id="like<?php echo $row['id']; ?>">
-                                            <like<?php echo $row['id']; ?>>
-                                                <a class="like"><i class="fas fa-heart"></i></a>
-                                            </like<?php echo $row['id']; ?>>
-                                            </div>
+                            <?php if ($row['active_on'] == 1) { ?>
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="single_ads_card mt-30">
+                                        <div class="ads_card_image">
+                                            <a href="adpost.php?view=<?php echo $row['id']; ?>">
+                                                <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads">
+                                            </a>
+                                            <?php if ($row['featured_on'] == 1) { ?>
+                                            <p class="sticker">Featured</p>
                                             <?php } ?>
-                                        
                                         </div>
-                                        <h4 class="title"><a href="adpost.php?view=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a></h4>
-                                        <p><i class="far fa-map"></i><?php echo $row['city'],", ",$row['country']; ?></p>
-                                        <div class="ads_price_date d-flex justify-content-between">
-                                            <span class="price">$<?php echo $row['price']; ?></span>
-                                            <!--<span class="date"><//?php echo $row['created_at']; ?></span> -->
+                                        <div class="ads_card_content">
+                                            <div class="meta d-flex justify-content-between">
+                                                <p><?php echo $fetch_info['name']; ?></p>
+
+                                                <?php if($fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
+                                                
+                                                <div id="like<?php echo $row['id']; ?>">
+                                                <unlike<?php echo $row['id']; ?>>
+                                                    <a style="color:red;" class="like"><i class="fas fa-heart"></i></a>
+                                                </unlike<?php echo $row['id']; ?>>
+                                                </div>
+
+                                                <?php } else { ?>
+
+                                                <div id="like<?php echo $row['id']; ?>">
+                                                <like<?php echo $row['id']; ?>>
+                                                    <a class="like"><i class="fas fa-heart"></i></a>
+                                                </like<?php echo $row['id']; ?>>
+                                                </div>
+                                                <?php } ?>
+                                            
+                                            </div>
+                                            <h4 class="title"><a href="adpost.php?view=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a></h4>
+                                            <p><i class="far fa-map"></i><?php echo $row['city'],", ",$row['country']; ?></p>
+                                            <div class="ads_price_date d-flex justify-content-between">
+                                                <span class="price">$<?php echo $row['price']; ?></span>
+                                                <!--<span class="date"><//?php echo $row['created_at']; ?></span> -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <?php } ?>
                             <?php endwhile ?>
 

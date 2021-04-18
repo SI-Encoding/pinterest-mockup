@@ -132,7 +132,7 @@ else
                                             <form action="dashboard.php" method="POST" autocomplete="">
 												<ul>
 													<!-- <li><a href="#"><i class="fas fa-eye"></i></a></li> -->
-                                                    <li><a data-toggle="modal" data-target="#id<?php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li>
+                                                    <!-- <li><a data-toggle="modal" data-target="#id<?//php echo $row['id']; ?>"><i class="fas fa-pencil-alt"></i></a></li> -->
 													<li><a href="user_list.php?delete_user=<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></a></li>
 												</ul>
                                             </form>
