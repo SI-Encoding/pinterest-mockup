@@ -105,7 +105,7 @@ INSERT INTO `ad_listings` (`id`, `category_id`, `user_id`, `title`, `content`, `
 (9, 6, 2, 'Samsung Glalaxy S8', '3453453dgfg', '100.00', '+7785458820', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-02 01:24:16', '2021-04-02 01:24:16'),
 (10, 7, 2, 'Fresh Digital Camera', 'fsdfdsf2121212fdsfsdfsdfsd', '4000.00', '', 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-02 01:28:07', '2021-04-02 01:28:07'),
 (47, 8, 2, 'Spammed Ad', 'Try and catch me!', '45.00', '999999999', 'No COuntry', 'Fake State', 'Fake Street', 1, 0, '2021-04-18 18:57:13', '2021-04-18 18:57:13'),
-(48, 3, 2, 'I love to spam ', 'I can\'t believe I am not banned yet', '45.00', '1111', 'Kanada', 'Los angels', 'php city', 1, 0, '2021-04-18 18:59:12', '2021-04-18 18:59:12'),
+(48, 3, 2, 'I love to spam ', 'I cant believe I am not banned yet', '45.00', '1111', 'Kanada', 'Los angels', 'php city', 1, 0, '2021-04-18 18:59:12', '2021-04-18 18:59:12'),
 (49, 4, 1, 'My awesome dining room', 'This is where I treat my guests every occasion ;)', '450.00', NULL, 'Canada', 'British Columbia', 'Vancouver', 1, 0, '2021-04-18 19:15:42', '2021-04-18 19:15:42'),
 (50, 2, 1, 'New garage storage space for rent', 'Hi, I am looking for renters who would be interested in looking for storage space. Only 550.00 a month!', '550.00', NULL, 'Canada', 'British Columbia', 'Vancouver', 0, 0, '2021-04-18 19:18:47', '2021-04-18 19:18:47');
 
