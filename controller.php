@@ -151,8 +151,6 @@ if (isset($_POST['update_ad'])) {
     }
 }
 
-
-
 // Delete Ad Post button
 if (isset($_POST['delete'])) {
     $delete = mysqli_real_escape_string($con, $_POST['delete']);
