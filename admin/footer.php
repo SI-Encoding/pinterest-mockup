@@ -7,7 +7,7 @@
             <div class="container">
                 <div class="footer_copyright_wrapper text-center d-sm-flex justify-content-between align-items-center">
                     <div class="copyright mt-15">
-                        <p>© 2021 Project</p>
+                        <p>©2022 Renovate</p>
                     </div>
                 </div>
             </div>
