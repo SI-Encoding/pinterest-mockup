@@ -4,8 +4,9 @@
 $sql = "SELECT * FROM `ad_listings`";
 $run_Sql = mysqli_query($con, $sql);
 
-$email = $_SESSION['email'];
-$password = $_SESSION['password'];
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+$password = isset($_SESSION['password']) ? $_SESSION['password'] : '';
+$user_id = isset($user_id) ? $user_id : '';
 
 if ($email != false && $password != false)
 {
@@ -128,7 +129,7 @@ if ($email != false && $password != false)
                                     <div class="single_ads_card mt-30">
                                         <div class="ads_card_image">
                                             <a href="adpost.php?view=<?php echo $row['id']; ?>">
-                                                <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads">
+                                                <img src="uploads/<?php if (isset($fetch_image['image']) && $fetch_image['image'] == '') { echo "no-image.png";} else { if(isset($fetch_image['image'])){echo $fetch_image['image'];} } ?>" alt="ads">
                                             </a>
                                             <?php if ($row['featured_on'] == 1) { ?>
                                             <p class="sticker">Featured</p>
@@ -136,9 +137,9 @@ if ($email != false && $password != false)
                                         </div>
                                         <div class="ads_card_content">
                                             <div class="meta d-flex justify-content-between">
-                                                <p><?php echo $fetch_info['name']; ?></p>
+                                                <p><?php echo $fetch_info['name']; echo $row['id'];?></p>
 
-                                                <?php if($fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
+                                                <?php if(isset($fetch_favourite['listing_id']) && isset($fetch_favourite['user_id']) && $fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
                                                 
                                                 <div id="like<?php echo $row['id']; ?>">
                                                 <unlike<?php echo $row['id']; ?>>

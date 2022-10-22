@@ -7,7 +7,7 @@
     <meta charset="utf-8">
 
     <!--====== Title ======-->
-    <title>Home | ClassiFied</title>
+    <title>Pinterest-mockup</title>
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,7 +78,7 @@
 
                     <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                         <ul class="navbar-nav m-auto">
-                            <li>
+                            <!-- <li>
                                 <a class="active" href="index.php">Home <span class="line"></span></a>
                             </li>
                             <li>
@@ -86,12 +86,12 @@
                             </li>
                             <li>
                                 <a href="#">Contact <span class="line"></span></a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
                     <?php
-                    if($email != false && $password != false){ ?>
+                    if(isset($email) && isset($password) && $email != false && $password != false){ ?>
 
                     <div class="navbar_btn">
                         <ul>
@@ -120,10 +120,10 @@
                     <?php } else { ?>
 
                     <div class="navbar_btn">
-                        <ul>
+                        <!-- <ul>
                             <li><a href="login.php">Login<span class="line"></span></a></li>
                             <li><a class="sign-up" href="register.php">Sign Up</a></li>
-                        </ul>
+                        </ul> -->
                     </div>
 
                     <?php } ?>

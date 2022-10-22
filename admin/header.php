@@ -39,7 +39,7 @@ else
     <meta charset="utf-8">
 
     <!--====== Title ======-->
-    <title>Home | ClassiFied</title>
+    <title>Pinterest-mockup</title>
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">

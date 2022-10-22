@@ -1,14 +1,16 @@
 <!doctype html>
 <html class="no-js" lang="en">
 <?php 
-$email = $_SESSION['email'];
-$password = $_SESSION['password'];
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+$password = isset($_SESSION['password']) ? $_SESSION['password'] : '';
+$admin = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+$user_id = isset($user_id) ? $user_id : '';
 ?>
 <head>
     <meta charset="utf-8">
 
     <!--====== Title ======-->
-    <title>Home | ClassiFied</title>
+    <title>Pinterest-mockup</title>
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -97,7 +99,7 @@ $password = $_SESSION['password'];
                                 $run_sql_noti = mysqli_query($con, $sql_noti);
                                 $fetch_noti = mysqli_fetch_assoc($run_sql_noti);
                             ?>
-                            <?php if ($fetch_noti['reason'] != "") { ?>
+                            <?php if (isset($fetch_noti) && $fetch_noti['reason'] != "") { ?>
                             <li>
                                 <a data-toggle="modal" data-target="#idnoti">Notification <i style="color:red;" class="fas fa-bell"></i><span class="line"></span></a>
                                 <!-- <a href="#">Notification <span class="line"></span></a> -->
@@ -184,7 +186,9 @@ $password = $_SESSION['password'];
                     <div class="col-lg">
                         <div class="post_form">
                             <div class="post_title">
-                                <h5 class="title"><?php echo $fetch_noti['reason']; ?></h5>
+                            <?php if (isset($fetch_noti)) { ?>
+                                  <h5 class="title"><?php echo $fetch_noti['reason']; ?></h5>
+                            <?php }?>        
                             </div>
                         </div>
                     </div>

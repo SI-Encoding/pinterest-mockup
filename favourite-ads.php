@@ -128,7 +128,7 @@ else
                                         $fetch_favourite = mysqli_fetch_assoc($run_sql_favourite);
                                     ?>
                                     <tr>
-                                <?php if($fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
+                                <?php if(isset($fetch_favourite['listing_id']) && $fetch_favourite['listing_id'] == $row['id'] And $fetch_favourite['user_id'] == $user_id) { ?>
 										<td class="photo">
 											<div class="table_photo"> <img src="uploads/<?php if ($fetch_image['image'] == '') { echo "no-image.png";} else { echo $fetch_image['image']; } ?>" alt="ads"> </div>
 										</td>

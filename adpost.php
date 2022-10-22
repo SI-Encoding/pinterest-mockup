@@ -113,7 +113,7 @@ if (isset($_GET['view'])) {
                             $fetch_comment_count = mysqli_fetch_assoc($run_Sql_comment_count);
 
                             ?>
-                                <h5 class="title">Comments (<?php echo $fetch_comment_count['comments']; ?>) :</h5>
+                                <h5 class="title">Comments (<?php if(isset($fetch_comment_count['comments'])){echo $fetch_comment_count['comments'];} ?>) :</h5>
                             </div>
                             <div class="product_rating_star">
                             <?php if ($fetch_rating['rating'] < 2) { ?>
