@@ -63,6 +63,7 @@ if (isset($_GET['view'])) {
 }
 ?>
 
+
     <section class="product_details_page pt-70 pb-120">
         <div class="container">
             <div class="row">
@@ -86,6 +87,10 @@ if (isset($_GET['view'])) {
                             <div class="product_price">
                                 <span class="price">$<?php echo $fetch_info['price']; ?></span>
                             </div>
+                            
+           
+                            <div id="share" class="fa fa-share" style="display: flex; gap: 8px;"><a href="#">Share</a></div>
+
                             <div class="product_date">
                                 <ul class="meta">
                                     <li><i class="fa fa-clock-o"></i><a href="#"><?php echo $fetch_info['created_at']; ?></a></li>
@@ -389,5 +394,91 @@ if (isset($_GET['view'])) {
         </div>
     </section>
 
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js'
 
+    // Add Firebase products that you want to use
+    import { getAuth, signInWithPopup, GoogleAuthProvider} from 'https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js'
+
+    const firebaseConfig = {
+        apiKey: 'ENTER_YOUR_FIREBASE_ apiKey_HERE',
+        authDomain: `ENTER_YOUR_FIREBASE_authDomain_HERE`,
+        projectId: `ENTER_YOUR_FIREBASE_projectId_HERE`,
+        storageBucket: `ENTER_YOUR_FIREBASE_storageBucket_HERE`,
+        messagingSenderId: `ENTER_YOUR_FIREBASE_messagingSenderId_HERE`,
+        appId: `ENTER_YOUR_FIREBASE_appId_HERE`,
+        measurementId: `ENTER_YOUR_FIREBASE_measurementId_HERE`
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const provider = new GoogleAuthProvider();
+       
+    $(document).ready(function() {
+        $("#share").click(function() {
+
+            window.confirm("Post successfully shared");
+            let userProfile = {}
+            signInWithPopup(auth, provider)
+            .then((result) => {        
+                //This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user.providerData[0];
+
+                userProfile.userId = user.uid
+                userProfile.username = user.displayName
+                userProfile.profilePic = user.photoURL
+
+            let url = "uploads/<?php echo $fetch_image['image']?>"
+            const toDataURL = url => fetch(url)
+                .then(response => response.blob())
+                .then(blob => new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.onerror = reject
+                reader.readAsDataURL(blob)
+                }))
+            toDataURL(url)
+            .then(dataUrl => {
+           $.ajax({
+                type: "post",
+                url: "http://127.0.0.1:5000/fb-clone-post",
+                dataType: "json",
+                headers: {
+                   "Content-Type":"application/json;charset=utf-8"
+                },
+                data: 
+                    JSON.stringify({
+                        message: "<?php echo $fetch_info['content']?>", 
+                        profilePic: userProfile.profilePic, 
+                        username: userProfile.username, 
+                        image: dataUrl, 
+                        favourite: false, 
+                        gif: false, 
+                        userId: userProfile.userId,
+                        sharedFrom: "Pinterest-mockup",
+                        link: window.location.href
+                    }),
+                success: function(data){
+                    console.log('success: '+data);
+                }
+                })
+               })
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+            });
+            })
+            
+        });
+ </script>
 <?php include "footer.php"; ?>
