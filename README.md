@@ -4,8 +4,8 @@ This is a web application created using Bootstrap to create the user interface, 
 
 # Instructions to SETUP and RUN
 ***
-1. Please install Ampps for your computer: https://ampps.com/downloads
-2. Open ampps, and open the Root Directory, (<YOUR_MAIN_DRIVE>\Ampps\www), and put this git repo into there.
+1. Please install Ampps for your computer: https://www.apachefriends.org/
+2. Open ampps, and open the Root Directory, (<YOUR_MAIN_DRIVE>\xampp\htdocs), and put this git repo into there.
 3. Go to 'http://localhost/phpmyadmin/', and create a database called 'database' and import the SQL dump file: database.sql .
 4. Go to 'http://localhost/pinterest-mockup/', to be able to view the web application.
 5. Go to 'http://localhost/pinterest-mockup/admin/', to be able to view the web application as an admin.
