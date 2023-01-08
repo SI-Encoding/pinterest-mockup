@@ -1,6 +1,8 @@
-<?php require_once "controller.php"; ?>
+<?php require_once "private/controller.php"; ?>
 
 <?php
+
+
 $sql = "SELECT * FROM `ad_listings`";
 $run_Sql = mysqli_query($con, $sql);
 

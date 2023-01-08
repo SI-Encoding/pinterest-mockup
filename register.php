@@ -1,4 +1,4 @@
-<?php require_once "controller.php"; ?>
+<?php require_once "private/controller.php"; ?>
 <?php include "header.php"; ?>
 
     <section>

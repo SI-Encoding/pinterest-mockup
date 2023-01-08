@@ -1,4 +1,4 @@
-<?php require_once "admin_controller.php"; ?>
+<?php require_once "../private/admin_controller.php"; ?>
 <?php
 $email = $_SESSION['email'];
 $password = $_SESSION['password'];
