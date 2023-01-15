@@ -131,7 +131,7 @@ if ($email != false && $password != false)
                                     <div class="single_ads_card mt-30">
                                         <div class="ads_card_image">
                                             <a href="adpost.php?view=<?php echo $row['id']; ?>">
-                                                <img src="uploads/<?php if (isset($fetch_image['image']) && $fetch_image['image'] == '') { echo "no-image.png";} else { if(isset($fetch_image['image'])){echo $fetch_image['image'];} } ?>" alt="ads">
+                                                <img src="uploads/<?php if (!isset($fetch_image['image'])) { echo "no-image.png";} else { if(isset($fetch_image['image'])){echo $fetch_image['image'];} } ?>" alt="ads">
                                             </a>
                                             <?php if ($row['featured_on'] == 1) { ?>
                                             <p class="sticker">Featured</p>
